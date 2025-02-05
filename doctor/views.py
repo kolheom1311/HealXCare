@@ -121,6 +121,7 @@ def doctor_register(request):
 
 @csrf_exempt
 def doctor_login(request):
+    request.session["login_type"] = "doctor"  # Set login type for doctors
     # page = 'patient_login'
     if request.method == 'GET':
         return render(request, 'doctor-login.html')

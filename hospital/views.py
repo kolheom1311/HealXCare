@@ -200,6 +200,7 @@ def login_user(request):
 
 @csrf_exempt
 def login_user(request):
+    request.session["login_type"] = "patient"  # Set login type for patients
     page = 'patient_login'
     if request.method == 'GET':
         return render(request, 'patient-login.html')
