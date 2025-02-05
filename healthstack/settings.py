@@ -26,7 +26,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SITE_ID = 1
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -74,13 +73,25 @@ SOCIALACCOUNT_PROVIDERS = {
         'APP': {
             'client_id': env('GOOGLE_CLIENT_ID'),
             'secret': env('GOOGLE_SECRET'),
-            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
         }
     }
 }
 
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Enable direct login
+
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'
+
+# Specify the custom adapter for handling social account logic
+SOCIALACCOUNT_ADAPTER = "hospital.adapters.MySocialAccountAdapter"
+ACCOUNT_ADAPTER = "healthstack.adapters.MySocialAccountAdapter"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

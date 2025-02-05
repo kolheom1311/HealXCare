@@ -27,6 +27,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # This enables login URLs
     path('login/', views.login_user, name='login'),
     path('', include('hospital.urls')),
     path('doctor/', include('doctor.urls')),
