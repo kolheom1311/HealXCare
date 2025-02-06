@@ -86,12 +86,12 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Enable direct login
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/login'
 LOGOUT_REDIRECT_URL = '/login'
 
 # Specify the custom adapter for handling social account logic
 SOCIALACCOUNT_ADAPTER = "hospital.adapters.MySocialAccountAdapter"
-ACCOUNT_ADAPTER = "healthstack.adapters.MySocialAccountAdapter"
+# ACCOUNT_ADAPTER = "healthstack.adapters.MySocialAccountAdapter"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
