@@ -198,6 +198,12 @@ SMTP_PORT = env('SMTP_PORT')
 SMTP_USER = env('SMTP_USER')
 SMTP_PASSWORD = env('SMTP_PASSWORD')
 
+
+ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables for security
+print("Loaded ZeptoMail API Key:", ZEPTO_MAIL_API_KEY)  # Debugging 
+ZEPTO_MAIL_URL = "https://api.zeptomail.com/v1.1/email"
+ZEPTO_MAIL_FROM_EMAIL = "team@uhtarticea.com"  # Must be from the domain configured in ZeptoMail
+
 # EMAIL
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

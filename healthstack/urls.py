@@ -15,6 +15,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from django.http import JsonResponse
+from healthstack.emails import send_zeptomail  # Import the ZeptoMail function
 from django.conf.urls.static import static
 from hospital import views
 
@@ -28,6 +30,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # This enables login URLs
+    path("send-email/", views.send_test_email, name="send_test_email"),
     path('login/', views.login_user, name='login'),
     path('', include('hospital.urls')),
     path('doctor/', include('doctor.urls')),

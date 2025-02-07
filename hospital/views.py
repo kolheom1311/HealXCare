@@ -33,9 +33,44 @@ from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
-
+from django.http import JsonResponse
+from healthstack.emails import send_zeptomail  # Import the ZeptoMail function
 
 # Create your views here.
+
+def send_test_email(request):
+    """View to send a welcome email using ZeptoMail"""
+    response = send_zeptomail(
+        subject="Welcome to HealxCare - Your Journey to Better Health Starts Here!",
+        to_email="kolheom1311@gmail.com",
+        message="""
+        <html>
+        <body>
+            <h1 style="color:#2D89EF;">Welcome to HealxCare! 🎉</h1>
+            <p>Dear User,</p>
+            <p>We’re thrilled to have you on board. Your health and well-being are our top priorities, and we’re here to support you every step of the way.</p>
+            <p>With <strong>HealxCare</strong>, you can:</p>
+            <ul>
+                <li>✅ Access personalized health insights</li>
+                <li>✅ Track your wellness progress</li>
+                <li>✅ Connect with expert healthcare professionals</li>
+                <li>✅ Get real-time health updates and recommendations</li>
+            </ul>
+            <p>To get started, simply log in to your account and explore everything we have to offer.</p>
+            <p><a href="https://healxcare.in/login" style="background-color:#2D89EF;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Login to Your Account</a></p>
+            <p>If you have any questions, our support team is always here to help.</p>
+            <p>Stay healthy, stay happy.</p>
+            <p><strong>The HealxCare Team</strong></p>
+            <hr>
+            <p>📧 Need help? Contact us at <a href="mailto:support@healxcare.com">support@healxcare.com</a></p>
+        </body>
+        </html>
+        """
+    )
+
+    
+    return JsonResponse(response)  # Return ZeptoMail response as JSON
+
 @csrf_exempt
 def hospital_home(request):
     # .order_by('-created_at')[:6]
