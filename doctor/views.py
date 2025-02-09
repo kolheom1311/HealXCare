@@ -1,4 +1,4 @@
-import email
+'''import email
 from email import message
 from multiprocessing import context
 from turtle import title
@@ -35,8 +35,46 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 from xhtml2pdf import pisa
 from .models import Report
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt'''
 
+import email
+from email import message
+from multiprocessing import context
+from turtle import title
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from hospital_admin.views import prescription_list
+from .forms import DoctorUserCreationForm, DoctorForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.cache import cache_control
+from hospital.models import User, Patient
+from hospital_admin.models import Admin_Information, Clinical_Laboratory_Technician, Test_Information
+from .models import Doctor_Information, Appointment, Education, Experience, Prescription_medicine, Report, Specimen, Test, Prescription_test, Prescription, Doctor_review
+from django.db.models import Q, Count
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
+import random
+import string
+from datetime import datetime, timedelta
+import datetime
+import re
+from django.core.mail import BadHeaderError, send_mail
+from django.template.loader import render_to_string, get_template
+from django.http import HttpResponse
+from django.utils.html import strip_tags
+from io import BytesIO
+from urllib import response
+from xhtml2pdf import pisa
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils import timezone
+from django.utils.crypto import constant_time_compare
+from hospital.views import send_zeptomail_using_template
 # Create your views here.
 
 def generate_random_string():
@@ -92,6 +130,82 @@ def logoutDoctor(request):
     messages.success(request, 'User Logged out')
     return render(request,'doctor-login.html')
 
+# @csrf_exempt
+# def doctor_register(request):
+#     page = 'doctor-register'
+#     form = DoctorUserCreationForm()
+
+#     if request.method == 'POST':
+#         form = DoctorUserCreationForm(request.POST)
+#         if form.is_valid():
+#             # form.save()
+#             # commit=False --> don't save to database yet (we have a chance to modify object)
+#             user = form.save(commit=False)
+#             user.is_doctor = True
+#             # user.username = user.username.lower()  # lowercase username
+#             user.save()
+
+#             messages.success(request, 'Doctor account was created!')
+
+#             # After user is created, we can log them in
+#             #login(request, user)
+#             return redirect('doctor-login')
+
+#         else:
+#             messages.error(request, 'An error has occurred during registration')
+
+#     context = {'page': page, 'form': form}
+#     return render(request, 'doctor-register.html', context)
+
+# @csrf_exempt
+# def doctor_login(request):
+#     request.session["login_type"] = "doctor"  # Set login type for doctors
+#     # page = 'patient_login'
+#     if request.method == 'GET':
+#         return render(request, 'doctor-login.html')
+#     elif request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+        
+#         try:
+#             user = User.objects.get(username=username)
+#         except:
+#             messages.error(request, 'Username does not exist')
+                
+#         user = authenticate(username=username, password=password)
+        
+#         if user is not None:
+            
+#             login(request, user)
+#             if request.user.is_doctor:
+#                 # user.login_status = "online"
+#                 # user.save()
+#                 messages.success(request, 'Welcome Doctor!')
+#                 return redirect('doctor-dashboard')
+#             else:
+#                 messages.error(request, 'Invalid credentials. Not a Doctor')
+#                 return redirect('doctor-logout')   
+#         else:
+#             messages.error(request, 'Invalid username or password')
+            
+#     return render(request, 'doctor-login.html')
+
+def send_verification_email(request, user):
+    current_site = get_current_site(request)
+    token_generator = PasswordResetTokenGenerator()
+    verification_link = f"http://{current_site.domain}/doctor/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{token_generator.make_token(user)}/"
+    
+    template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    template_data = {
+        "Link": verification_link
+    }
+    
+    send_zeptomail_using_template(
+        to_email=user.email,
+        template_token=template_token,
+        template_data=template_data
+    )
+
 @csrf_exempt
 def doctor_register(request):
     page = 'doctor-register'
@@ -100,29 +214,44 @@ def doctor_register(request):
     if request.method == 'POST':
         form = DoctorUserCreationForm(request.POST)
         if form.is_valid():
-            # form.save()
-            # commit=False --> don't save to database yet (we have a chance to modify object)
             user = form.save(commit=False)
             user.is_doctor = True
-            # user.username = user.username.lower()  # lowercase username
+            user.is_active = False  # Make the user inactive until email verification
             user.save()
-
-            messages.success(request, 'Doctor account was created!')
-
-            # After user is created, we can log them in
-            #login(request, user)
+            
+            send_verification_email(request, user)
+            messages.success(request, 'Doctor account created! Please check your email to verify your account.')
             return redirect('doctor-login')
-
         else:
-            messages.error(request, 'An error has occurred during registration')
+            messages.error(request, 'An error occurred during registration')
 
     context = {'page': page, 'form': form}
     return render(request, 'doctor-register.html', context)
 
 @csrf_exempt
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user is not None:
+        token_generator = PasswordResetTokenGenerator()
+        token_valid = token_generator.check_token(user, token)
+        
+        if token_valid:
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Your account has been verified! You can now log in.')
+            return redirect('doctor-login')
+    
+    messages.error(request, 'Activation link is invalid or expired.')
+    return redirect('doctor-register')
+
+@csrf_exempt
 def doctor_login(request):
     request.session["login_type"] = "doctor"  # Set login type for doctors
-    # page = 'patient_login'
     if request.method == 'GET':
         return render(request, 'doctor-login.html')
     elif request.method == 'POST':
@@ -131,17 +260,19 @@ def doctor_login(request):
         
         try:
             user = User.objects.get(username=username)
-        except:
+        except User.DoesNotExist:
             messages.error(request, 'Username does not exist')
-                
+            return redirect('doctor-login')
+
         user = authenticate(username=username, password=password)
         
         if user is not None:
+            if not user.is_active:
+                messages.error(request, 'Email not verified. Please check your email and verify your account.')
+                return redirect('doctor-login')
             
             login(request, user)
-            if request.user.is_doctor:
-                # user.login_status = "online"
-                # user.save()
+            if user.is_doctor:
                 messages.success(request, 'Welcome Doctor!')
                 return redirect('doctor-dashboard')
             else:
@@ -149,7 +280,7 @@ def doctor_login(request):
                 return redirect('doctor-logout')   
         else:
             messages.error(request, 'Invalid username or password')
-            
+    
     return render(request, 'doctor-login.html')
 
 @csrf_exempt

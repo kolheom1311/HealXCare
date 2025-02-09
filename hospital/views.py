@@ -5,6 +5,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 # from django.contrib.auth.models import User
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, PatientForm, PasswordResetForm
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 from hospital.models import Hospital_Information, User, Patient 
 from doctor.models import Test, testCart, testOrder
 from hospital_admin.models import hospital_department, specialization, service, Test_Information
@@ -12,7 +14,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from datetime import datetime
+from datetime import *
 import datetime
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
@@ -35,7 +37,10 @@ from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from healthstack.emails import *  # Import the ZeptoMail function
-from hospital.adapters import *
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from hospital.adapters import send_zeptomail_using_template
+from django.contrib.sites.shortcuts import get_current_site
+
 
 # Create your views here.
 
@@ -117,6 +122,23 @@ def change_password(request,pk):
             messages.error(request,"New Password and Confirm Password is not same")
             return redirect("change-password",pk)
     return render(request, 'change-password.html',context)
+
+def send_patient_verification_email(request, user):
+    current_site = get_current_site(request)
+    token_generator = PasswordResetTokenGenerator()
+
+    verification_link = f"http://{current_site.domain}/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{token_generator.make_token(user)}/"
+
+    template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    template_data = {
+        "Link": verification_link
+    }
+
+    send_zeptomail_using_template(
+        to_email=user.email,
+        template_token=template_token,
+        template_data=template_data
+    )
 
 
 def add_billing(request):
@@ -316,18 +338,27 @@ def logoutUser(request):
 #     if request.method == 'POST':
 #         form = CustomUserCreationForm(request.POST)
 #         if form.is_valid():
-#             # form.save()
-#             user = form.save(commit=False) # commit=False --> don't save to database yet (we have a chance to modify object)
+#             user = form.save(commit=False)  # Don't save yet to modify
 #             user.is_patient = True
-#             # user.username = user.username.lower()  # lowercase username
 #             user.save()
-#             messages.success(request, 'Patient account was created!')
 
-#             send_template_email()
+#             # Fallback if user's name is empty
+#             username = user.username # if user.username.strip() else "User"
+#             # Send email after successful registration
+#             template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+#             template_data = {
+#                 "Username": username  # Use first name or fallback
+#             }
+            
+#             send_zeptomail_using_template(
+#                 to_email=user.email,  # Send email to registered user
+#                 template_token=template_token,
+#                 template_data=template_data
+#             )
 
-#             # After user is created, we can log them in --> login(request, user)
+#             messages.success(request, 'Patient account was created! A confirmation email has been sent.')
+
 #             return redirect('login')
-
 #         else:
 #             messages.error(request, 'An error has occurred during registration')
 
@@ -342,30 +373,45 @@ def patient_register(request):
         if form.is_valid():
             user = form.save(commit=False)  # Don't save yet to modify
             user.is_patient = True
+            user.is_active = False  # Mark as inactive until verification
             user.save()
 
-            # Fallback if user's name is empty
-            username = user.username # if user.username.strip() else "User"
-            # Send email after successful registration
-            template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
-            template_data = {
-                "Username": username  # Use first name or fallback
-            }
-            
-            send_zeptomail_using_template(
-                to_email=user.email,  # Send email to registered user
-                template_token=template_token,
-                template_data=template_data
-            )
+            # Generate verification email
+            send_patient_verification_email(request, user)
 
             messages.success(request, 'Patient account was created! A confirmation email has been sent.')
-
             return redirect('login')
         else:
             messages.error(request, 'An error has occurred during registration')
 
     context = {'page': page, 'form': form}
     return render(request, 'patient-register.html', context)
+
+from django.utils.timezone import now
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user is not None:
+        token_generator = PasswordResetTokenGenerator()
+        token_valid = token_generator.check_token(user, token)
+        
+        # Check if the token is still valid
+        if token_valid:
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Your account has been verified! You can now log in.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Activation link is invalid or expired.')
+            return redirect('patient-register')
+
+    messages.error(request, 'Activation link is invalid or expired.')
+    return redirect('patient-register')
 
 
 @csrf_exempt

@@ -38,7 +38,7 @@ def send_zeptomail_using_template(to_email, template_token, template_data):
     payload = {
         "from": {"address": "noreply@uhtarticea.com", "name": "HealXCare"},
         "to": [{"email_address": {"address": to_email}}],
-        "mail_template_key":"2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2",
+        "mail_template_key":template_token,
         "merge_info": template_data
 
     }

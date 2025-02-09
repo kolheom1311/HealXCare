@@ -19,7 +19,6 @@ from django.http import JsonResponse
 from healthstack.emails import send_zeptomail  # Import the ZeptoMail function
 from django.conf.urls.static import static
 from hospital import views
-
 # For forgot password views and reset password views
 from django.contrib.auth import views as auth_views
 
@@ -30,8 +29,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # This enables login URLs
-    # path("send-email/", views.send_test_email, name="send_test_email"),
-    # path("send-mail/", views.send_template_email, name="send_template_email"),
+    path('activate/<str:uidb64>/<str:token>/', views.activate_account, name='activate'),
     path('login/', views.login_user, name='login'),
     path('redirect-after-google-login/', views.redirect_after_google_login, name='redirect_after_google_login'),
     path('', include('hospital.urls')),

@@ -868,23 +868,23 @@ def accept_doctor(request,pk):
 
     doctor_specialization = doctor.specialization.specialization_name
 
-    subject = "Acceptance of Doctor Registration"
+    # subject = "Acceptance of Doctor Registration"
 
-    values = {
-            "doctor_name":doctor_name,
-            "doctor_email":doctor_email,
-            "doctor_department":doctor_department,
+    # values = {
+    #         "doctor_name":doctor_name,
+    #         "doctor_email":doctor_email,
+    #         "doctor_department":doctor_department,
 
-            "doctor_specialization":doctor_specialization,
-        }
+    #         "doctor_specialization":doctor_specialization,
+    #     }
 
-    html_message = render_to_string('hospital_admin/accept-doctor-mail.html', {'values': values})
-    plain_message = strip_tags(html_message)
+    # html_message = render_to_string('hospital_admin/accept-doctor-mail.html', {'values': values})
+    # plain_message = strip_tags(html_message)
 
-    try:
-        send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [doctor_email], html_message=html_message, fail_silently=False)
-    except BadHeaderError:
-        return HttpResponse('Invalid header found')
+    # try:
+    #     send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [doctor_email], html_message=html_message, fail_silently=False)
+    # except BadHeaderError:
+    #     return HttpResponse('Invalid header found')
 
     messages.success(request, 'Doctor Accepted!')
     return redirect('register-doctor-list')

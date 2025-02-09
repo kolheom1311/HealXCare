@@ -140,12 +140,12 @@
                                           <div class="row justify-content-end">
                                             <div class="col col-lg-4 col-md-6 mt-5 cart-wrap ftco-animate">
                                               <div class="cart-total mb-3">
-                                                <h3><b>Cart Totals: </b><span>{{ test_order.get_totals }} Tk.</span></h3>
+                                                <h3><b>Cart Totals: </b><span>Rs. {{ test_order.get_totals }}</span></h3>
                                                 
                                                 <hr>
                                                 
                                               </div>
-                                              	<p class="text-center"><a href="{% url 'ssl-payment-request-test' pk=test_order.user.patient.patient_id id=test_order.id pk2=prescription_id %}" class="btn btn-primary py-3 px-4">Proceed to
+                                              	<p class="text-center"><a href="#" class="btn btn-primary py-3 px-4">Proceed to
                                                   Checkout</a></p>
 												<p class="text-center"><a href="" class="btn btn-info py-3 px-4">Back to Prescription</a></p>
 													

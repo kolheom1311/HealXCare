@@ -16,6 +16,7 @@ urlpatterns = [
     path('doctor-change-password/<int:pk>', views.doctor_change_password,name='doctor-change-password'),
     path('doctor-profile-settings/', views.doctor_profile_settings,name='doctor-profile-settings'),
     path('doctor-register/', views.doctor_register, name='doctor-register'),
+    path('activate/<str:uidb64>/<str:token>/', views.activate_account, name='activate'),
     path('doctor-logout/', views.logoutDoctor, name='doctor-logout'),
     path('my-patients/', views.my_patients, name='my-patients'),
     path('booking/<int:pk>/', views.booking, name='booking'),
