@@ -1,10 +1,7 @@
-import email
 from multiprocessing import context
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-# from django.contrib.auth.models import User
-# from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, PatientForm, PasswordResetForm
+from django.http import HttpResponse
+from .forms import CustomUserCreationForm, PasswordResetForm
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from hospital.models import Hospital_Information, User, Patient 
@@ -15,7 +12,6 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import *
-import datetime
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.template.loader import get_template
@@ -24,16 +20,10 @@ from .utils import searchDoctors, searchHospitals, searchDepartmentDoctors, pagi
 from .models import Patient, User
 from doctor.models import *
 # from doctor.models import Doctor_Information, Appointment,Report, Specimen, Test, Prescription, Prescription_medicine, Prescription_test
-from django.db.models import Q, Count
-import re
+from django.db.models import Q
 from io import BytesIO
-from urllib import response
-from django.core.mail import BadHeaderError, send_mail
 from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from healthstack.emails import *  # Import the ZeptoMail function
@@ -153,9 +143,6 @@ def edit_billing(request):
 def edit_prescription(request):
     return render(request, 'edit-prescription.html')
 
-# def forgot_password(request):
-#     return render(request, 'forgot-password.html')
-
 @csrf_exempt
 def resetPassword(request):
     form = PasswordResetForm()
@@ -163,33 +150,40 @@ def resetPassword(request):
     if request.method == 'POST':
         form = PasswordResetForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user_email = user.email
-       
-            subject = "Password Reset Requested"
-            # email_template_name = "password_reset_email.txt"
-            values = {
-				"email":user.email,
-				'domain':'127.0.0.1:8000',
-				'site_name': 'Website',
-				"uid": urlsafe_base64_encode(force_bytes(user.pk)),
-				"user": user,
-				'token': default_token_generator.make_token(user),
-				'protocol': 'http',
-			}
+            email = form.cleaned_data['email']
 
-            html_message = render_to_string('mail_template.html', {'values': values})
-            plain_message = strip_tags(html_message)
-            
-            try:
-                send_mail(subject, plain_message, 'admin@example.com',  [user.email], html_message=html_message, fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return redirect ("password_reset_done")
+            # Check if user exists before proceeding
+            user = User.objects.filter(email=email).first()
+            if not user:
+                messages.error(request, 'No user found with this email address.')
+                return redirect('reset_password')
+
+            current_site = get_current_site(request)
+            token_generator = PasswordResetTokenGenerator()
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = token_generator.make_token(user)
+
+            # Construct Password Reset Link
+            reset_link = f"http://{current_site.domain}/reset/{uid}/{token}/"
+
+            # **ZeptoMail Integration**
+            template_token = "2518b.53e56cd38bd377f6.k1.4c77b750-e6e8-11ef-ab60-525400b0b0f3.194eadc2f45"
+            template_data = {
+                "reset-link": reset_link
+            }
+
+            send_zeptomail_using_template(
+                to_email=user.email,
+                template_token=template_token,
+                template_data=template_data
+            )
+
+            messages.success(request, 'Password reset link sent to your email.')
+            return redirect("password_reset_done")
 
     context = {'form': form}
     return render(request, 'reset_password.html', context)
-    
+   
     
 def privacy_policy(request):
     return render(request, 'privacy-policy.html')
@@ -387,7 +381,6 @@ def patient_register(request):
     context = {'page': page, 'form': form}
     return render(request, 'patient-register.html', context)
 
-from django.utils.timezone import now
 
 def activate_account(request, uidb64, token):
     try:
