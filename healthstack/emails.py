@@ -1,48 +1,10 @@
-# import requests
-# import json
-# from django.conf import settings
-
-# def send_zeptomail(subject, to_email, message):
-#     # url = "https://api.zeptomail.com/v1.1/email"
-#     # headers = {
-#     #     "Authorization": "Zoho-enczapikey PHtE6r1fF+y5i2Ero0MGsPG+RZagNN96qbluLAkU5opKW6MAHU0E+IwvxzK0o0wsV/hDF/6eyog5uLOUsO+NJ2jkYW8dWmqyqK3sx/VYSPOZsbq6x00buFgSckDVUYbndt9r0S3RutvfNA==",
-#     #     "Content-Type": "application/json",
-#     # }
-    
-#     # payload = {
-#     #     "from": {
-#     #         "address": "team@uhtarticea.com",
-#     #         "name": "HealXCare"  # Change this to your project name
-#     #     },
-#     #     "to": [{"email_address": {"address": to_email}}],
-#     #     "subject": subject,
-#     #     "htmlbody": message,  # Supports HTML content
-#     # }
-
-#     # response = requests.post(url, headers=headers, data=json.dumps(payload))
-#     # return response.json()
-#     url = "https://api.zeptomail.in/v1.1/email"
-
-#     payload = "{\n\"from\": { \"address\": \"healxcare@uhtarticea.com\"},\n\"to\": [{\"email_address\": {\"address\": \"pchaudhari2303@gmail.com\",\"name\": \"Om\"}}],\n\"subject\":\"Test Email from HealXCare\",\n\"htmlbody\":\"<div><b> Test email sent successfully.  </b></div>\"\n}"
-#     headers = {
-#     'accept': "application/json",
-#     'content-type': "application/json",
-#     'authorization': "Zoho-enczapikey PHtE6r1fF+y5i2Ero0MGsPG+RZagNN96qbluLAkU5opKW6MAHU0E+IwvxzK0o0wsV/hDF/6eyog5uLOUsO+NJ2jkYW8dWmqyqK3sx/VYSPOZsbq6x00buFgSckDVUYbndt9r0S3RutvfNA==",
-#     }
-
-#     response = requests.request("POST", url, data=payload, headers=headers)
-
-#     print(response.text)
-
 import os
 import requests
 
 api_key = os.getenv("ZEPTO_MAIL_API_KEY")  # Directly fetch from environment
-
-print("DEBUG: API Key in emails.py =", api_key)  # Debugging
-
+url = os.getenv("ZEPTO_MAIL_URL")
 def send_zeptomail(subject, to_email, message):
-    url = "https://api.zeptomail.in/v1.1/email"
+    url = url
     headers = {
         "Authorization": f"Zoho-enczapikey {api_key}",
         "Content-Type": "application/json",
@@ -57,3 +19,29 @@ def send_zeptomail(subject, to_email, message):
 
     response = requests.post(url, headers=headers, json=payload)
     return response.json()
+
+def send_zeptomail_using_template(to_email, template_token, template_data):
+    """
+    Sends an email using a ZeptoMail portal template.
+
+    :param to_email: Recipient's email address
+    :param template_token: Unique token of the ZeptoMail template
+    :param template_data: Dictionary of dynamic variables for the template
+    """
+    url = "https://api.zeptomail.in/v1.1/email/template"
+
+    headers = {
+        "Authorization": f"Zoho-enczapikey {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "from": {"address": "noreply@uhtarticea.com", "name": "HealXCare"},
+        "to": [{"email_address": {"address": to_email}}],
+        "mail_template_key":"2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2",
+        "merge_info": template_data
+
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    return response.json()  # Return ZeptoMail response

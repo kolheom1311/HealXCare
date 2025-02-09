@@ -86,7 +86,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Enable direct login
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/redirect-after-google-login/'
 LOGOUT_REDIRECT_URL = '/login'
 
 # Specify the custom adapter for handling social account logic
@@ -192,29 +192,8 @@ PAYMENT_VARIANTS = {
         'secret_key': 'RAZORPAY_SECRET_KEY'})}
 
 
-#Mailtrap env Variables
-SMTP_HOST = env('SMTP_HOST')
-SMTP_PORT = env('SMTP_PORT')
-SMTP_USER = env('SMTP_USER')
-SMTP_PASSWORD = env('SMTP_PASSWORD')
-
 
 ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables for security
-print("Loaded ZeptoMail API Key:", ZEPTO_MAIL_API_KEY)  # Debugging 
-ZEPTO_MAIL_URL = "https://api.zeptomail.com/v1.1/email"
-ZEPTO_MAIL_FROM_EMAIL = "team@uhtarticea.com"  # Must be from the domain configured in ZeptoMail
-
-# EMAIL
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_PORT = SMTP_PORT
-EMAIL_HOST_USER = SMTP_USER
-EMAIL_HOST_PASSWORD = SMTP_PASSWORD
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

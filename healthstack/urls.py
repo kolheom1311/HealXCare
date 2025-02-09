@@ -30,8 +30,10 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # This enables login URLs
-    path("send-email/", views.send_test_email, name="send_test_email"),
+    # path("send-email/", views.send_test_email, name="send_test_email"),
+    # path("send-mail/", views.send_template_email, name="send_template_email"),
     path('login/', views.login_user, name='login'),
+    path('redirect-after-google-login/', views.redirect_after_google_login, name='redirect_after_google_login'),
     path('', include('hospital.urls')),
     path('doctor/', include('doctor.urls')),
     path('api/', include('api.urls')),
@@ -45,7 +47,6 @@ urlpatterns = [
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name="reset_password_sent.html"),name="password_reset_done"),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="reset.html"),name="password_reset_confirm"),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name="reset_password_complete.html"),name="password_reset_complete"),
-    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

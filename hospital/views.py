@@ -34,7 +34,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from healthstack.emails import send_zeptomail  # Import the ZeptoMail function
+from healthstack.emails import *  # Import the ZeptoMail function
+from hospital.adapters import *
 
 # Create your views here.
 
@@ -42,13 +43,13 @@ def send_test_email(request):
     """View to send a welcome email using ZeptoMail"""
     response = send_zeptomail(
         subject="Welcome to HealxCare - Your Journey to Better Health Starts Here!",
-        to_email="kolheom1311@gmail.com",
+        to_email="rohandhonde36@gmail.com",
         message="""
         <html>
         <body>
             <h1 style="color:#2D89EF;">Welcome to HealxCare! 🎉</h1>
             <p>Dear User,</p>
-            <p>We’re thrilled to have you on board. Your health and well-being are our top priorities, and we’re here to support you every step of the way.</p>
+            <p>We're thrilled to have you on board. Your health and well-being are our top priorities, and we’re here to support you every step of the way.</p>
             <p>With <strong>HealxCare</strong>, you can:</p>
             <ul>
                 <li>✅ Access personalized health insights</li>
@@ -70,6 +71,25 @@ def send_test_email(request):
 
     
     return JsonResponse(response)  # Return ZeptoMail response as JSON
+
+# def send_template_email(request):
+#     """View to send an email using a ZeptoMail template."""
+    
+#     # Unique token from ZeptoMail portal
+#     template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+
+#     # Dynamic variables to pass (must match ZeptoMail template placeholders)
+#     template_data = {
+#         "Username": "Om"
+#     }
+
+#     response = send_zeptomail_using_template(
+#         to_email="kolheom1311@gmail.com",
+#         template_token=template_token,
+#         template_data=template_data
+#     )
+
+#     return JsonResponse(response, safe=False)
 
 @csrf_exempt
 def hospital_home(request):
@@ -276,6 +296,10 @@ def login_user(request):
 
     return render(request, 'patient-login.html')
 
+@csrf_exempt
+def redirect_after_google_login(request):
+    redirect_url = MySocialAccountAdapter().get_login_redirect_url(request)
+    return redirect(redirect_url)  # Redirecting to the determined URL
 
 @csrf_exempt
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -285,6 +309,30 @@ def logoutUser(request):
     return redirect('login')
 
 @csrf_exempt
+# def patient_register(request):
+#     page = 'patient-register'
+#     form = CustomUserCreationForm()
+
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         if form.is_valid():
+#             # form.save()
+#             user = form.save(commit=False) # commit=False --> don't save to database yet (we have a chance to modify object)
+#             user.is_patient = True
+#             # user.username = user.username.lower()  # lowercase username
+#             user.save()
+#             messages.success(request, 'Patient account was created!')
+
+#             send_template_email()
+
+#             # After user is created, we can log them in --> login(request, user)
+#             return redirect('login')
+
+#         else:
+#             messages.error(request, 'An error has occurred during registration')
+
+#     context = {'page': page, 'form': form}
+#     return render(request, 'patient-register.html', context)
 def patient_register(request):
     page = 'patient-register'
     form = CustomUserCreationForm()
@@ -292,21 +340,33 @@ def patient_register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            # form.save()
-            user = form.save(commit=False) # commit=False --> don't save to database yet (we have a chance to modify object)
+            user = form.save(commit=False)  # Don't save yet to modify
             user.is_patient = True
-            # user.username = user.username.lower()  # lowercase username
             user.save()
-            messages.success(request, 'Patient account was created!')
 
-            # After user is created, we can log them in --> login(request, user)
+            # Fallback if user's name is empty
+            username = user.username # if user.username.strip() else "User"
+            # Send email after successful registration
+            template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+            template_data = {
+                "Username": username  # Use first name or fallback
+            }
+            
+            send_zeptomail_using_template(
+                to_email=user.email,  # Send email to registered user
+                template_token=template_token,
+                template_data=template_data
+            )
+
+            messages.success(request, 'Patient account was created! A confirmation email has been sent.')
+
             return redirect('login')
-
         else:
             messages.error(request, 'An error has occurred during registration')
 
     context = {'page': page, 'form': form}
     return render(request, 'patient-register.html', context)
+
 
 @csrf_exempt
 @login_required(login_url="login")
