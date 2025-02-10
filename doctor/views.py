@@ -37,44 +37,39 @@ from xhtml2pdf import pisa
 from .models import Report
 from django.views.decorators.csrf import csrf_exempt'''
 
-import email
-from email import message
-from multiprocessing import context
-from turtle import title
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from hospital_admin.views import prescription_list
-from .forms import DoctorUserCreationForm, DoctorForm
+from .forms import DoctorUserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from hospital.models import User, Patient
-from hospital_admin.models import Admin_Information, Clinical_Laboratory_Technician, Test_Information
+from hospital_admin.models import Test_Information
 from .models import Doctor_Information, Appointment, Education, Experience, Prescription_medicine, Report, Specimen, Test, Prescription_test, Prescription, Doctor_review
 from django.db.models import Q, Count
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 import random
 import string
-from datetime import datetime, timedelta
+from datetime import datetime
 import datetime
-import re
 from django.core.mail import BadHeaderError, send_mail
 from django.template.loader import render_to_string, get_template
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 from io import BytesIO
-from urllib import response
 from xhtml2pdf import pisa
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils import timezone
-from django.utils.crypto import constant_time_compare
-from hospital.views import send_zeptomail_using_template
+# from hospital.views import send_zeptomail_using_template
+from hospital.adapters import send_zeptomail_using_template
+# from healthstack.emails import send_zeptomail_using_template
+from django.utils.dateformat import format
+from django.utils.timezone import localtime
+
 # Create your views here.
 
 def generate_random_string():
@@ -202,6 +197,16 @@ def send_verification_email(request, user):
     
     send_zeptomail_using_template(
         to_email=user.email,
+        template_token=template_token,
+        template_data=template_data
+    )
+
+
+def send_appointment_status_mail(request, patient_email, template_data):
+    template_token = "2518b.53e56cd38bd377f6.k1.fb7e96e0-e7bc-11ef-ac6f-525400ab18e6.194f04e074e"
+    
+    send_zeptomail_using_template(
+        to_email=patient_email,
         template_token=template_token,
         template_data=template_data
     )
@@ -335,41 +340,22 @@ def accept_appointment(request, pk):
     appointment.appointment_status = 'confirmed'
     appointment.save()
     
-    # Mailtrap
-    
     patient_email = appointment.patient.email
     patient_name = appointment.patient.name
-    patient_username = appointment.patient.username
-    patient_serial_number = appointment.patient.serial_number
     doctor_name = appointment.doctor.name
-
-    appointment_serial_number = appointment.serial_number
-    appointment_date = appointment.date
-    appointment_time = appointment.time
+    appointment_date = format(appointment.date, "d-m-Y")  # Convert date to string
+    appointment_time = str(appointment.time)  # Convert time to string
     appointment_status = appointment.appointment_status
     
-    subject = "Appointment Acceptance Email"
-    
-    values = {
-            "email":patient_email,
-            "name":patient_name,
-            "username":patient_username,
-            "serial_number":patient_serial_number,
-            "doctor_name":doctor_name,
-            "appointment_serial_num":appointment_serial_number,
-            "appointment_date":appointment_date,
-            "appointment_time":appointment_time,
-            "appointment_status":appointment_status,
+    template_data = {
+        "status_message": appointment_status,
+        "appointment_time": appointment_time,
+        "patient_name": patient_name,
+        "appointment_date": appointment_date,
+        "doctor_name": doctor_name
     }
-    
-    html_message = render_to_string('appointment_accept_mail.html', {'values': values})
-    plain_message = strip_tags(html_message)
-    
-    # try:
-    #     send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
-    # except BadHeaderError:
-    #     return HttpResponse('Invalid header found')
-    
+
+    send_appointment_status_mail(request, patient_email, template_data)
     messages.success(request, 'Appointment Accepted')
     
     return redirect('doctor-dashboard')
@@ -381,32 +367,26 @@ def reject_appointment(request, pk):
     appointment.appointment_status = 'cancelled'
     appointment.save()
     
-    # Mailtrap
-    
     patient_email = appointment.patient.email
+    appointment_status = appointment.appointment_status
+    appointment_date = format(appointment.date, "d-m-Y")  # Convert date to string
+    appointment_time = str(appointment.time)  # Convert time to string
     patient_name = appointment.patient.name
     doctor_name = appointment.doctor.name
-
-    subject = "Appointment Rejection Email"
     
-    values = {
-            "email":patient_email,
-            "name":patient_name,
-            "doctor_name":doctor_name,
+    template_data = {
+        "status_message": appointment_status,
+        "appointment_time": appointment_time,
+        "patient_name": patient_name,
+        "appointment_date": appointment_date,
+        "doctor_name": doctor_name
     }
-    
-    html_message = render_to_string('appointment_reject_mail.html', {'values': values})
-    plain_message = strip_tags(html_message)
-    
-    # try:
-    #     send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
-    # except BadHeaderError:
-    #     return HttpResponse('Invalid header found')
+
+    send_appointment_status_mail(request, patient_email, template_data)
     
     messages.error(request, 'Appointment Rejected')
     
     return redirect('doctor-dashboard')
-
 
 #         end_year = doctor.end_year
 #         end_year = re.sub("'", "", end_year)

@@ -13,11 +13,11 @@
     <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-    <link rel="stylesheet" href="../static/HealthStack-System/css/HealthAdvice/style.css">
-    <link rel="stylesheet" href="{% static 'HealthStack-System/css/HealthAdvice/style.css' %}">
+    <!-- <link rel="stylesheet" href="../static/HealthStack-System/css/HealthAdvice/style.css"> -->
     <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'HealthStack-System/css/HealthAdvice/style.css' %}"> -->
     <link rel="icon" href="../static/images/self_improvement.png" type="image/x-icon">
-    <title>Home Page</title>
+    <title>Health Advice</title>
 </head>
 
 <body>
@@ -54,101 +54,104 @@
 
     <!-- Header -->
     {% if not user.is_authenticated%}
-			<header class="header">{% include 'navbar_home.html' %}</header>
+    <header class="header">{% include 'navbar_home.html' %}</header>
     {% endif %}
     {% if user.is_authenticated and user.is_doctor %}
-			<header class="header">{% include 'doctor-home.html' %}</header>
+    <header class="header">{% include 'doctor-navbar.html' %}</header>
     {% endif %}
     {% if user.is_authenticated and user.is_patient %}
-			<header class="header">{% include 'patient_navbar.html' %}</header>
+    <header class="header">{% include 'patient_navbar.html' %}</header>
     {% endif %}
 
-	<!-- /Header -->
+    <!-- /Header -->
 
     <!-- text on home page -->
-    <header id="showcase" style="background-image: url(../static/images/bg4.jpg);">
-        <h1> HealXCare </h1>
-        <p>
-            Yoga helps you in forming perfect harmony between your body and your mind.
-        </p>
-        <a href="#ailment" class="button">Read more</a>
-    </header>
+    <div class="health-advice">
+        <header id="showcase" style="background-image: url(../static/images/bg4.jpg);">
+            <h1> HealXCare </h1>
+            <p>
+                Yoga helps you in forming perfect harmony between your body and your mind.
+            </p>
+            <a href="#ailment" class="button">Read more</a>
+        </header>
 
-    <!-- ailments page -->
-    <div id="ailment">
-        <section class="cards">
-            <h1>Select your ailment!</h1>
-            <div class="search-box">
-                <div class="search-input">
-                    <input type="text" placeholder="Type to search..">
-                    <div class="autocom-box">
+        <!-- ailments page -->
+        <div id="ailment">
+            <section class="cards">
+                <h1>Select your ailment!</h1>
+                <div class="search-box">
+                    <div class="search-input">
+                        <input type="text" placeholder="Type to search..">
+                        <div class="autocom-box">
+                        </div>
+                        <span class="material-symbols-outlined">search</span>
                     </div>
-                    <span class="material-symbols-outlined">search</span>
                 </div>
-            </div>
-            <div class="cue">
-                <!-- six boxes for six different ailments -->
-                <div class="box">
-                    <a href="html/digestive.html">
-                        <img src="../static/images/digestive.jpg" alt="digestive">
-                        <div class="dis">Digestive disorders</div>
-                    </a>
+                <div class="cue">
+                    <!-- six boxes for six different ailments -->
+                    <div class="box">
+                        <a href="html/digestive.html">
+                            <img src="../static/images/digestive.jpg" alt="digestive">
+                            <div class="dis">Digestive disorders</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="html/heartdisease.html">
+
+                            <img src="../static/images/heart.jpg" alt="heart Diseases">
+                            <div class="dis"> Heart problem</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="html/depression.html">
+                            <img src="../static/images/anxiety.jpg" alt="anxiety">
+                            <div class="dis"> Anxiety/panic </div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="html/asthama.html">
+                            <img src="../static/images/asthma.jpg" alt="asthma">
+                            <div class="dis"> Asthma</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="html/bodypain.html">
+                            <img src="../static/images/pain.jpg" alt="back pain">
+                            <div class="dis"> Joint pain</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="html/diabetes.html">
+                            <img src="../static/images/diabetes.jpg" alt="diabetes">
+                            <div class="dis">Diabetes</div>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="box">
-                    <a href="html/heartdisease.html">
-
-                        <img src="../static/images/heart.jpg" alt="heart Diseases">
-                        <div class="dis"> Heart problem</div>
-                    </a>
-                </div>
-
-                <div class="box">
-                    <a href="html/depression.html">
-                        <img src="../static/images/anxiety.jpg" alt="anxiety">
-                        <div class="dis"> Anxiety/panic </div>
-                    </a>
-                </div>
-
-                <div class="box">
-                    <a href="html/asthama.html">
-                        <img src="../static/images/asthma.jpg" alt="asthma">
-                        <div class="dis"> Asthma</div>
-                    </a>
-                </div>
-
-                <div class="box">
-                    <a href="html/bodypain.html">
-                        <img src="../static/images/pain.jpg" alt="back pain">
-                        <div class="dis"> Joint pain</div>
-                    </a>
-                </div>
-
-                <div class="box">
-                    <a href="html/diabetes.html">
-                        <img src="../static/images/diabetes.jpg" alt="diabetes">
-                        <div class="dis">Diabetes</div>
-                    </a>
-                </div>
-            </div>
-
-        </section>
-    </div>
-
-    <!-- Contact Us page -->
-    <div id="contactus">
-        <form action="#" method="POST">
-            <section class="contact">
-                <h1>Contact Us</h1>
-                <input type="hidden" name="_captcha" value="false">
-                <input type="text" placeholder="Name" name="name" required>
-                <input type="email" placeholder="Email" name="email" required>
-                <textarea type="text" class="message" name="Message" placeholder="Type your message here"></textarea>
-                <button type="submit"> Send</button>
             </section>
-        </form>
+        </div>
+
+        <!-- Contact Us page -->
+        <div id="contactus">
+            <form action="#" method="POST">
+                <section class="contact">
+                    <h1>Contact Us</h1>
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" placeholder="Name" name="name" required>
+                    <input type="email" placeholder="Email" name="email" required>
+                    <textarea type="text" class="message" name="Message"
+                        placeholder="Type your message here"></textarea>
+                    <button type="submit"> Send</button>
+                </section>
+            </form>
+        </div>
     </div>
-    
+
     <!-- <footer class="footer">
         <p>Be a part of our community today.</p><br>
         <div class="foot">

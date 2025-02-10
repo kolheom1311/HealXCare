@@ -191,7 +191,11 @@ def about_us(request):
     return render(request, 'about-us.html')
 
 def Health_Advice(request):
-    return render(request, 'HealthAdvice.html')
+    patient = None
+    if request.user.is_authenticated and hasattr(request.user, 'patient'):
+        patient = request.user.patient
+
+    return render(request, 'HealthAdvice.html', {"patient": patient})
 
 @csrf_exempt
 @login_required(login_url="login")
