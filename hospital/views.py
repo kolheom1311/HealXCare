@@ -28,7 +28,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from healthstack.emails import *  # Import the ZeptoMail function
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from hospital.adapters import send_zeptomail_using_template
+from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
 
 
@@ -129,7 +129,6 @@ def send_patient_verification_email(request, user):
         template_token=template_token,
         template_data=template_data
     )
-
 
 def add_billing(request):
     return render(request, 'add-billing.html')
