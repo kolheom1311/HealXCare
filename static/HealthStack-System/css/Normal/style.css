@@ -3323,11 +3323,11 @@ home-image {
 	user-select: none
 }
 
-.custom_check input {
+/* .custom_check input {
 	position: absolute;
 	opacity: 0;
 	cursor: pointer
-}
+} */
 
 .custom_check input:checked~.checkmark {
 	background-color: #fff;

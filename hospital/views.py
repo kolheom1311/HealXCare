@@ -30,6 +30,8 @@ from healthstack.emails import *  # Import the ZeptoMail function
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
+import razorpay
+import os
 
 
 # Create your views here.
@@ -401,7 +403,25 @@ def activate_account(request, uidb64, token):
             user.is_active = True
             user.save()
             messages.success(request, 'Your account has been verified! You can now log in.')
+            
+        
+            # Fallback if user's name is empty
+            username = user.username # if user.username.strip() else "User"
+            # Send email after successful registration
+            template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+            template_data = {
+                "Username": username  # Use first name or fallback
+            }
+            
+            send_zeptomail_using_template(
+                to_email=user.email,  # Send email to registered user
+                template_token=template_token,
+                template_data=template_data
+            )
+
             return redirect('login')
+        
+
         else:
             messages.error(request, 'Activation link is invalid or expired.')
             return redirect('patient-register')
@@ -698,8 +718,6 @@ def hospital_doctor_list(request, pk):
         messages.error(request, 'Not Authorized')
         return render(request, 'patient-login.html')   
     
-
-
 @csrf_exempt
 @login_required(login_url="login")
 def hospital_doctor_register(request, pk):
@@ -742,7 +760,6 @@ def hospital_doctor_register(request, pk):
         logout(request)
         messages.info(request, 'Not Authorized')
         return render(request, 'doctor-login.html')
-    
    
 def testing(request):
     # hospitals = Hospital_Information.objects.get(hospital_id=1)
@@ -971,5 +988,6 @@ def got_online(sender, user, request, **kwargs):
 @csrf_exempt
 @receiver(user_logged_out)
 def got_offline(sender, user, request, **kwargs):   
+
     user.login_status = False
     user.save() 

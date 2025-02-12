@@ -35,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['192.168.1.8', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.4', '127.0.0.1']
 # ALLOWED_HOSTS = ['mobile view', 'local host','ngrok -- keeps on changing']
 
 # Application definition
@@ -200,6 +200,9 @@ ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'hospital.User'
+
+RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET')
 
 
 # SESSION AGE 45 Minutes
