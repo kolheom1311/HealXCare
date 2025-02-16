@@ -200,6 +200,9 @@
 											<li class="nav-item">
 												<a class="nav-link" href="#doc_certificate" data-toggle="tab">Certificate</a>
 											</li>
+											<li class="nav-item">
+												<a class="nav-link" href="#doc_availability" data-toggle="tab">Availabilty</a>
+											</li>
 											<!-- <li class="nav-item">
 												<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
 											</li> -->
@@ -311,6 +314,51 @@
 											</div>
 										</div>
 										<!-- /Certificate Content -->
+
+										<!-- Availability Content -->
+										<div role="tabpanel" id="doc_availability" class="tab-pane fade">
+											<div style="display: flex; justify-content: center;">
+												<table style="border: 2px solid black; border-collapse: collapse; width: 80%; font-size: 1.2em;">
+													<tr>
+														<th style="border: 2px solid black; padding: 10px;">Hospital</th>
+														<th style="border: 2px solid black; padding: 10px;">Day</th>
+														<th style="border: 2px solid black; padding: 10px;">From</th>
+														<th style="border: 2px solid black; padding: 10px;">To</th>
+													</tr>
+													<tr>
+														<td style="border: 2px solid black; padding: 10px;">MGM Hospital</td>
+														<td style="border: 2px solid black; padding: 10px;">Monday</td>
+														<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+														<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
+													</tr>
+													<tr>
+														<td style="border: 2px solid black; padding: 10px;">Dr. Batra's Clinic</td>
+														<td style="border: 2px solid black; padding: 10px;">Tuesday</td>
+														<td style="border: 2px solid black; padding: 10px;">10:00 AM</td>
+														<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
+													</tr>
+													<tr>
+														<td style="border: 2px solid black; padding: 10px;">Downtown Hospital</td>
+														<td style="border: 2px solid black; padding: 10px;">Wednesday</td>
+														<td style="border: 2px solid black; padding: 10px;">8:00 AM</td>
+														<td style="border: 2px solid black; padding: 10px;">12:00 PM</td>
+													</tr>
+													<tr>
+														<td style="border: 2px solid black; padding: 10px;">MGM Hospital</td>
+														<td style="border: 2px solid black; padding: 10px;">Thursday</td>
+														<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+														<td style="border: 2px solid black; padding: 10px;">5:00 PM</td>
+													</tr>
+													<tr>
+														<td style="border: 2px solid black; padding: 10px;">Sunrise Medical Center</td>
+														<td style="border: 2px solid black; padding: 10px;">Friday</td>
+														<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+														<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<!-- /Availability Content -->
 										
 										
 										
@@ -501,6 +549,17 @@
 		<!-- Video Call Modal -->
 		
 	
+		<!-- Script -->
+		<script>
+			const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+			const today = days[new Date().getDay()];
+			document.querySelectorAll(".blinker").forEach(el => el.style.visibility = "hidden");
+			const todayRow = document.getElementById(today);
+			if (todayRow) {
+				todayRow.querySelector(".blinker").style.visibility = "visible";
+			}
+		</script>
+		
 		<!-- jQuery -->
 		<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
 		
