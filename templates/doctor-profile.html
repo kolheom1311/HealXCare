@@ -63,6 +63,75 @@
 				opacity: 1;
 			}
 		}
+
+		/* Responsive Styles */
+		@media (max-width: 768px) {
+			table {
+				width: 100%;
+				font-size: 1em;
+			}
+
+			th,
+			td {
+				padding: 8px;
+			}
+
+			.blinker {
+				width: 8px;
+				height: 8px;
+			}
+
+			/* Make table scrollable horizontally on small screens */
+			.table-container {
+				overflow-x: auto;
+			}
+
+			table {
+				table-layout: auto;
+				width: 100%;
+			}
+		}
+
+		/* For very small devices (extra small) */
+		@media (max-width: 480px) {
+			table {
+				width: 100%;
+				font-size: 0.9em;
+			}
+
+			th,
+			td {
+				padding: 6px;
+			}
+
+			.blinker {
+				width: 6px;
+				height: 6px;
+			}
+		}
+
+		/* .blinker {
+			width: 10px;
+			height: 10px;
+			justify-content: end;
+			background-color: green;
+			border-radius: 50%;
+			animation: blink 1s infinite;
+		}
+
+		@keyframes blink {
+			0% {
+				opacity: 1;
+			}
+
+			50% {
+				opacity: 0;
+			}
+
+			100% {
+				opacity: 1;
+			}
+		} */
 	</style>
 
 </head>
@@ -252,29 +321,23 @@
 									</ul>
 								</nav>
 								<!-- /Tab Menu -->
-
 								<!-- Tab Content -->
 								<div class="tab-content pt-0">
-
 									<!-- Overview Content -->
 									<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
 										<div class="row">
 											<div class="col-md-12 col-lg-9">
-
 												<!-- About Details -->
 												<div class="widget about-widget">
 													<h4 class="widget-title">About Me</h4>
 													<p>{{doctor.description}}</p>
 												</div>
 												<!-- /About Details -->
-
 												<!-- Education Details -->
 												<div class="widget education-widget">
 													<h4 class="widget-title">Education</h4>
 													<div class="experience-box">
 														<ul class="experience-list">
-
-
 															{% for e in educations %}
 															<li>
 																<div class="experience-user">
@@ -290,19 +353,15 @@
 																</div>
 															</li>
 															{% endfor %}
-
-
 														</ul>
 													</div>
 												</div>
 												<!-- /Education Details -->
-
 												<!-- Experience Details -->
 												<div class="widget experience-widget">
 													<h4 class="widget-title">Work & Experience</h4>
 													<div class="experience-box">
 														<ul class="experience-list">
-
 															{% for e in experiences %}
 															<li>
 																<div class="experience-user">
@@ -319,19 +378,10 @@
 																</div>
 															</li>
 															{% endfor %}
-
-
-
-
-
 														</ul>
 													</div>
 												</div>
 												<!-- /Experience Details -->
-
-
-
-
 												<!-- Specializations List -->
 												<!-- <div class="service-list">
 													<h4>Visiting Time</h4>
@@ -346,111 +396,99 @@
 										</div>
 									</div>
 									<!-- /Overview Content -->
-
 									<!-- Certificate Content -->
 									<div role="tabpanel" id="doc_certificate" class="tab-pane fade">
 										<div class="row">
-
 											<div class="col-md-6 offset-md-3 zoom">
 												<img src="{{doctor.certificate_image.url}}" alt="logo"
 													class="img-fluid">
-
 											</div>
-
 										</div>
 									</div>
 									<!-- /Certificate Content -->
 
 									<!-- Availability Content -->
 									<div role="tabpanel" id="doc_availability" class="tab-pane fade">
+										<!-- <h2></h2> -->
 										<div style="display: flex; justify-content: center;">
-											<table
-												style="border: border-collapse: collapse; width: 80%; font-size: 1.2em;">
-												<tr>
-													<th style="border: 0px solid black; padding: 10px;"></th>
-													<th style="border: 2px solid black; padding: 10px;">Hospital</th>
-													<th style="border: 2px solid black; padding: 10px;">Day</th>
-													<th style="border: 2px solid black; padding: 10px;">From</th>
-													<th style="border: 2px solid black; padding: 10px;">To</th>
-												</tr>
-												<tr id="sunday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Sunrise Medical
-														Center</td>
-													<td style="border: 2px solid black; padding: 10px;">Sunday</td>
-													<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
-												</tr>
-												<tr id="monday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">MGM Hospital
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Monday</td>
-													<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
-												</tr>
-												<tr id="tuesday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Dr. Batra's
-														Clinic</td>
-													<td style="border: 2px solid black; padding: 10px;">Tuesday</td>
-													<td style="border: 2px solid black; padding: 10px;">10:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
-												</tr>
-												<tr id="wednesday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Downtown
-														Hospital</td>
-													<td style="border: 2px solid black; padding: 10px;">Wednesday</td>
-													<td style="border: 2px solid black; padding: 10px;">8:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">12:00 PM</td>
-												</tr>
-												<tr id="thursday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">MGM Hospital
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Thursday</td>
-													<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">5:00 PM</td>
-												</tr>
-												<tr id="friday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Sunrise Medical
-														Center</td>
-													<td style="border: 2px solid black; padding: 10px;">Friday</td>
-													<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
-												</tr>
-												<tr id="saturday">
-													<td
-														style="border: 2px solid black; padding: 10px; justify-items: center;">
-														<div class="blinker"></div>
-													</td>
-													<td style="border: 2px solid black; padding: 10px;">Sunrise Medical
-														Center</td>
-													<td style="border: 2px solid black; padding: 10px;">Saturday</td>
-													<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
-													<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
-												</tr>
-											</table>
+											<div class="table-container" style="overflow-x: auto; width: 100%;">
+												<table style="border-collapse: collapse; width: 80%; font-size: 1.2em;">
+													<thead>
+														<tr>
+															<th style="border: 0px solid black; padding: 10px;"></th>
+															<th style="border: 2px solid black; padding: 10px;">Hospital</th>
+															<th style="border: 2px solid black; padding: 10px;">Day</th>
+															<th style="border: 2px solid black; padding: 10px;">From</th>
+															<th style="border: 2px solid black; padding: 10px;">To</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr id="sunday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">Sunrise Medical Center</td>
+															<td style="border: 2px solid black; padding: 10px;">Sunday</td>
+															<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
+														</tr>
+														<tr id="monday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">MGM Hospital</td>
+															<td style="border: 2px solid black; padding: 10px;">Monday</td>
+															<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
+														</tr>
+														<tr id="tuesday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">Dr. Batra's Clinic</td>
+															<td style="border: 2px solid black; padding: 10px;">Tuesday</td>
+															<td style="border: 2px solid black; padding: 10px;">10:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">4:00 PM</td>
+														</tr>
+														<tr id="wednesday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">Downtown Hospital</td>
+															<td style="border: 2px solid black; padding: 10px;">Wednesday</td>
+															<td style="border: 2px solid black; padding: 10px;">8:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">12:00 PM</td>
+														</tr>
+														<tr id="thursday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">MGM Hospital</td>
+															<td style="border: 2px solid black; padding: 10px;">Thursday</td>
+															<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">5:00 PM</td>
+														</tr>
+														<tr id="friday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">Sunrise Medical Center</td>
+															<td style="border: 2px solid black; padding: 10px;">Friday</td>
+															<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
+														</tr>
+														<tr id="saturday">
+															<td style="border: 0px solid black; padding: 10px; justify-items: center;">
+																<div class="blinker"></div>
+															</td>
+															<td style="border: 2px solid black; padding: 10px;">Sunrise Medical Center</td>
+															<td style="border: 2px solid black; padding: 10px;">Saturday</td>
+															<td style="border: 2px solid black; padding: 10px;">11:00 AM</td>
+															<td style="border: 2px solid black; padding: 10px;">3:00 PM</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
 										</div>
 									</div>
 									<!-- /Availability Content -->
