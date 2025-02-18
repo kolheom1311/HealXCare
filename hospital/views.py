@@ -1,11 +1,11 @@
 from multiprocessing import context
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import CustomUserCreationForm, PasswordResetForm
+from .forms import CustomUserCreationForm, PasswordResetForm, PaymentForm
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from hospital.models import Hospital_Information, User, Patient 
-from doctor.models import Test, testCart, testOrder
+from hospital.models import Hospital_Information, User, Patient
+from doctor.models import Test, testCart, testOrder, Appointment
 from hospital_admin.models import hospital_department, specialization, service, Test_Information
 from django.views.decorators.cache import cache_control
 from django.contrib.auth import login, authenticate, logout
@@ -31,10 +31,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
 import razorpay
+from razorpay import Payment
 import os
-
-
-# Create your views here.
 
 def send_test_email(request):
     """View to send a welcome email using ZeptoMail"""
@@ -448,73 +446,6 @@ def patient_dashboard(request):
         
     return render(request, 'patient-dashboard.html', context)
 
-
-# def profile_settings(request):
-#     if request.user.is_patient:
-#         # patient = Patient.objects.get(user_id=pk)
-#         patient = Patient.objects.get(user=request.user)
-#         form = PatientForm(instance=patient)  
-
-#         if request.method == 'POST':
-#             form = PatientForm(request.POST, request.FILES,instance=patient)  
-#             if form.is_valid():
-#                 form.save()
-#                 return redirect('patient-dashboard')
-#             else:
-#                 form = PatientForm()
-#     else:
-#         redirect('logout')
-
-#     context = {'patient': patient, 'form': form}
-#     return render(request, 'profile-settings.html', context)
-
-'''
-@csrf_exempt
-@login_required(login_url="login")
-def profile_settings(request):
-    if request.user.is_patient:
-        # patient = Patient.objects.get(user_id=pk)
-        patient = Patient.objects.get(user=request.user)
-        user = request.user
-        user.refresh_from_db()
-        old_featured_image = patient.featured_image
-        
-        if request.method == 'GET':
-            context = {'patient': patient}
-            return render(request, 'profile-settings.html', context)
-        elif request.method == 'POST':
-            if 'featured_image' in request.FILES:
-                featured_image = request.FILES['featured_image']
-            else:
-                featured_image = old_featured_image
-                
-            name = request.POST.get('name')
-            dob = request.POST.get('dob')
-            age = request.POST.get('age')
-            blood_group = request.POST.get('blood_group')
-            phone_number = request.POST.get('phone_number')
-            address = request.POST.get('address')
-            nid = request.POST.get('nid')
-            history = request.POST.get('history')
-            patient.name = name
-            patient.age = age
-            patient.phone_number = phone_number
-            patient.address = address
-            patient.blood_group = blood_group
-            patient.history = history
-            patient.dob = dob
-            patient.nid = nid
-            patient.featured_image = featured_image
-            patient.profile_completed = True
-            patient.save()
-            
-            messages.success(request, 'Profile Settings Changed!')
-            
-            return redirect('patient-dashboard')
-    else:
-        redirect('logout')  
-'''
-
 @csrf_exempt
 @login_required(login_url="login")
 def profile_settings(request):
@@ -576,10 +507,6 @@ def search(request):
         messages.error(request, 'Not Authorized')
         return render(request, 'patient-login.html')    
     
-
-# def checkout_payment(request):
-#     return render(request, 'checkout.html')
-
 @csrf_exempt
 @login_required(login_url="login")
 def multiple_hospital(request):
@@ -655,7 +582,6 @@ def hospital_profile(request, pk):
         logout(request)
         messages.error(request, 'Not Authorized')
         return render(request, 'patient-login.html') 
-    
     
 def data_table(request):
     return render(request, 'data-table.html')

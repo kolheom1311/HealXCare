@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: green;
+        }
+    </style>
+    <script>
+        setTimeout(function() {
+            window.location.href = "/patient-dashboard/";
+        }, 5000); // Redirect after 5 seconds
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Successful!</h1>
+        <p>Please wait, you will be redirected back to your dashboard.</p>
+    </div>
+</body>
+</html>

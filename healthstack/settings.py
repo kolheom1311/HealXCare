@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'doctor.apps.DoctorConfig',
     'pharmacy.apps.PharmacyConfig',
     'widget_tweaks',
+    'payments',
     'rest_framework',
     'ChatApp.apps.ChatappConfig',
     'debug_toolbar',
@@ -186,10 +187,11 @@ STATICFILES_DIRS = [
 ]
 
 #Razorpay
-PAYMENT_VARIANTS = {
-    'razorpay': ('django_payments_razorpay.RazorPayProvider', {
-        'public_key': 'RAZORPAY_PUBLIC_KEY',
-        'secret_key': 'RAZORPAY_SECRET_KEY'})}
+# PAYMENT_VARIANTS = {
+#     'razorpay': ('django_payments_razorpay.RazorPayProvider', {
+#         'public_key': 'RAZORPAY_PUBLIC_KEY',
+#         'secret_key': 'RAZORPAY_SECRET_KEY'})
+#         }
 
 
 
@@ -201,8 +203,8 @@ ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'hospital.User'
 
-RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID')
-RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET')
+KEYID = env('RAZORPAY_KEY_ID')
+KEYSECRET = env('RAZORPAY_KEY_SECRET')
 
 
 # SESSION AGE 45 Minutes

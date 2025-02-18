@@ -5,8 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import Patient, User
 # Create a custom form that inherits from user form (reason --> for modify and customize)
-
-
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User

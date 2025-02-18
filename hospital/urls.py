@@ -10,17 +10,16 @@ from .pres_pdf import prescription_pdf
 # Views functions and urls must be linked. # of views == # of urls
 # App URL file - urls related to hospital
 
-
 urlpatterns = [
     path('', views.hospital_home, name='hospital_home'),
     path('search/', views.search, name='search'),
     path('change-password/<int:pk>', views.change_password, name='change-password'),
+    path('payments/', include('payments.urls')),
     path('add-billing/', views.add_billing, name='add-billing'),
     path('appointments/', views.appointments, name='appointments'),
     path('doctor-profile/<int:pk>', views.doctor_profile, name='doctor-profile'),
     path('edit-billing/', views.edit_billing, name='edit-billing'),
     path('edit-prescription/', views.edit_prescription, name='edit-prescription'),
-    # path('forgot-password/', views.forgot_password,name='forgot-password'),
     path('patient-dashboard/',views.patient_dashboard, name='patient-dashboard'),
     path('privacy-policy/', views.privacy_policy, name='privacy-policy'),
     path('profile-settings/',views.profile_settings, name='profile-settings'),
