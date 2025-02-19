@@ -154,6 +154,7 @@
                                 </td>
 
                                 <td>
+                                  {% if appointment.payment_status == 'pending' %}
                                   <div class="table-action">
                                     <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
                                       {% csrf_token %}
@@ -162,6 +163,16 @@
                                       </button>
                                     </form>
                                   </div>
+                                  {% endif %}
+                                  {% if appointment.payment_status == 'VALID' %}
+                                  <div class="table-action">
+                                    <form action="#">
+                                      <button type="submit" class="btn btn-sm bg-info-light">
+                                        <i class="fas fa-file-invoice"></i> View Invoice
+                                      </button>
+                                    </form>
+                                  </div>
+                                  {% endif %}
                                 </td>
                               </tr>
                               {% endfor %}
