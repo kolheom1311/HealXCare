@@ -307,48 +307,40 @@
                           <thead>
                             <tr>
                               <th>Doctor</th>
-                              <th>Tranx ID</th>
-                              <th>Tranx Date</th>
+                              <th>Transaction ID</th>
+                              <th>Transaction Date</th>
                               <th>Amount</th>
-                              <th>Card Type</th>
-                              <th>Card Issuer</th>
                               <th>Payment Status</th>
-
                             </tr>
                           </thead>
                           <tbody>
-
                             {% for payment in payments %}
                             <tr>
                               <td>
                                 <h2 class="table-avatar">
-                                  <a href="doctor-profile.html" class="avatar avatar-sm mr-2">
+                                  <a href="{% url 'doctor-profile' pk=payment.appointment.doctor_id %}"
+                                    class="avatar avatar-sm mr-2">
                                     <img class="avatar-img rounded-circle"
-                                      src="{{payment.appointment.doctor.featured_image.url}}" alt="User Image" />
+                                      src="{{ payment.appointment.doctor.featured_image.url }}" alt="Doctor Image" />
                                   </a>
-                                  <a href="doctor-profile.html">{{payment.appointment.doctor.name}}
-                                    <span>{{payment.appointment.doctor.department}}</span></a>
+                                  <a href="{% url 'doctor-profile' pk=payment.appointment.doctor_id %}">
+                                    {{ payment.appointment.doctor.name }}
+                                    <span>{{ payment.appointment.doctor.department }}</span>
+                                  </a>
                                 </h2>
                               </td>
-                              <td>{{payment.transaction_id}}</td>
-                              <td>{{payment.transaction_date}}</td>
-                              <td>{{payment.currency_amount}} INR</td>
-                              <td>{{payment.card_type}}</td>
-                              <td>{{payment.card_issuer}}</td>
+                              <td>{{ payment.payment_id }}</td>
+                              <td>{{ payment.created_at|date:"d M Y, h:i A" }}</td>
+                              <td>{{ payment.amount }} INR</td>
                               <td>
-                                {% if payment.status == 'VALID' %}
+                                {% if payment.status == "paid" %}
                                 <span class="badge badge-pill bg-success-light">Success</span>
                                 {% else %}
                                 <span class="badge badge-pill bg-warning-light">Pending</span>
                                 {% endif %}
                               </td>
-
                             </tr>
                             {% endfor %}
-
-
-
-
                           </tbody>
                         </table>
                       </div>
@@ -356,6 +348,8 @@
                   </div>
                 </div>
                 <!-- /Billing Tab -->
+
+
               </div>
               <!-- Tab Content -->
             </div>

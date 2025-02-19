@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 import razorpay
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
@@ -6,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Payment
 from doctor.models import Appointment
+from django.utils.timezone import now
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -76,6 +78,7 @@ def process_payment(request, appointment_id):
             return JsonResponse({'error': 'Payment verification failed'}, status=400)
 
     return redirect('payments:payment_failure')
+
 
 @csrf_exempt
 @login_required(login_url="login")

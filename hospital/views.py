@@ -1,7 +1,7 @@
 from multiprocessing import context
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import CustomUserCreationForm, PasswordResetForm, PaymentForm
+from .forms import CustomUserCreationForm, PasswordResetForm
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from hospital.models import Hospital_Information, User, Patient
@@ -33,6 +33,7 @@ from django.contrib.sites.shortcuts import get_current_site
 import razorpay
 from razorpay import Payment
 import os
+from payments.models import Payment
 
 def send_test_email(request):
     """View to send a welcome email using ZeptoMail"""
@@ -427,7 +428,7 @@ def activate_account(request, uidb64, token):
     messages.error(request, 'Activation link is invalid or expired.')
     return redirect('patient-register')
 
-
+'''
 @csrf_exempt
 @login_required(login_url="login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -438,9 +439,43 @@ def patient_dashboard(request):
         report = Report.objects.filter(patient=patient)
         prescription = Prescription.objects.filter(patient=patient).order_by('-prescription_id')
         appointments = Appointment.objects.filter(patient=patient).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed'))
+        # Fetch all payments and include appointment + doctor details
+        payments = Payment.objects.select_related('appointment__doctor').all()
         # payments = Payment.objects.filter(patient=patient).filter(appointment__in=appointments).filter(payment_type='appointment').filter(status='VALID')
         # context = {'patient': patient, 'appointments': appointments, 'payments': payments,'report':report,'prescription':prescription}
-        context = {'patient': patient, 'appointments': appointments,'report':report,'prescription':prescription}
+        context = {'patient': patient, 'appointments': appointments,'report':report,'prescription':prescription, 'payments': payments}
+    else:
+        return redirect('logout')
+        
+    return render(request, 'patient-dashboard.html', context)
+'''
+
+@csrf_exempt
+@login_required(login_url="login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def patient_dashboard(request):
+    if request.user.is_patient:
+        patient = Patient.objects.get(user=request.user)
+        report = Report.objects.filter(patient=patient)
+        prescription = Prescription.objects.filter(patient=patient).order_by('-prescription_id')
+        
+        # Fetch only the patient's appointments
+        appointments = Appointment.objects.filter(
+            patient=patient
+        ).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed'))
+
+        # ✅ Filter payments only related to the logged-in patient's appointments
+        payments = Payment.objects.select_related('appointment__doctor').filter(
+            appointment__patient=patient
+        )
+
+        context = {
+            'patient': patient,
+            'appointments': appointments,
+            'report': report,
+            'prescription': prescription,
+            'payments': payments
+        }
     else:
         return redirect('logout')
         
