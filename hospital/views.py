@@ -30,8 +30,8 @@ from healthstack.emails import *  # Import the ZeptoMail function
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
-import razorpay
-from razorpay import Payment
+# import razorpay
+# from razorpay import Payment
 import os
 from payments.models import Payment
 
@@ -133,6 +133,18 @@ def send_patient_verification_email(request, user):
 
 def add_billing(request):
     return render(request, 'add-billing.html')
+
+def generate_invoice(request, payment_id):
+    # Retrieve the payment details
+    payment = get_object_or_404(Payment, payment_id=payment_id)
+    
+    # Context to pass to the template
+    context = {
+        'payment': payment,
+        'items': payment.items.all(),  # Assuming a related model for items
+    }
+    
+    return render(request, 'billing_invoice.html', context)
 
 def appointments(request):
     return render(request, 'appointments.html')
@@ -329,39 +341,6 @@ def logoutUser(request):
     return redirect('login')
 
 @csrf_exempt
-# def patient_register(request):
-#     page = 'patient-register'
-#     form = CustomUserCreationForm()
-
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)  # Don't save yet to modify
-#             user.is_patient = True
-#             user.save()
-
-#             # Fallback if user's name is empty
-#             username = user.username # if user.username.strip() else "User"
-#             # Send email after successful registration
-#             template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
-#             template_data = {
-#                 "Username": username  # Use first name or fallback
-#             }
-            
-#             send_zeptomail_using_template(
-#                 to_email=user.email,  # Send email to registered user
-#                 template_token=template_token,
-#                 template_data=template_data
-#             )
-
-#             messages.success(request, 'Patient account was created! A confirmation email has been sent.')
-
-#             return redirect('login')
-#         else:
-#             messages.error(request, 'An error has occurred during registration')
-
-#     context = {'page': page, 'form': form}
-#     return render(request, 'patient-register.html', context)
 def patient_register(request):
     page = 'patient-register'
     form = CustomUserCreationForm()
@@ -384,7 +363,6 @@ def patient_register(request):
 
     context = {'page': page, 'form': form}
     return render(request, 'patient-register.html', context)
-
 
 def activate_account(request, uidb64, token):
     try:
@@ -427,28 +405,6 @@ def activate_account(request, uidb64, token):
 
     messages.error(request, 'Activation link is invalid or expired.')
     return redirect('patient-register')
-
-'''
-@csrf_exempt
-@login_required(login_url="login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def patient_dashboard(request):
-    if request.user.is_patient:
-        # patient = Patient.objects.get(user_id=pk)
-        patient = Patient.objects.get(user=request.user)
-        report = Report.objects.filter(patient=patient)
-        prescription = Prescription.objects.filter(patient=patient).order_by('-prescription_id')
-        appointments = Appointment.objects.filter(patient=patient).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed'))
-        # Fetch all payments and include appointment + doctor details
-        payments = Payment.objects.select_related('appointment__doctor').all()
-        # payments = Payment.objects.filter(patient=patient).filter(appointment__in=appointments).filter(payment_type='appointment').filter(status='VALID')
-        # context = {'patient': patient, 'appointments': appointments, 'payments': payments,'report':report,'prescription':prescription}
-        context = {'patient': patient, 'appointments': appointments,'report':report,'prescription':prescription, 'payments': payments}
-    else:
-        return redirect('logout')
-        
-    return render(request, 'patient-dashboard.html', context)
-'''
 
 @csrf_exempt
 @login_required(login_url="login")

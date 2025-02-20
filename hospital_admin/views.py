@@ -541,13 +541,13 @@ def create_report(request, pk):
                     "delivery_date":delivery_date,
                 }
 
-            html_message = render_to_string('hospital_admin/report-mail-delivery.html', {'values': values})
-            plain_message = strip_tags(html_message)
+            # html_message = render_to_string('hospital_admin/report-mail-delivery.html', {'values': values})
+            # plain_message = strip_tags(html_message)
 
-            try:
-                send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found') 
+            # try:
+            #     send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
+            # except BadHeaderError:
+            #     return HttpResponse('Invalid header found') 
 
             return redirect('mypatient-list')
 

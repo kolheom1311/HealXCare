@@ -42,6 +42,8 @@ ALLOWED_HOSTS = ['192.168.1.4', '127.0.0.1']
 
 INSTALLED_APPS = [
     'healthstack',
+    'HealXCare',
+    'HealthAdvice',
     'django.contrib.admin',
     'django.contrib.auth',
     'allauth',

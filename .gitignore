@@ -3,8 +3,6 @@
 /.venv
 /venv
 
-# Database
-db.sqlite3
-
 # remove build
 /build
+db.sqlite3

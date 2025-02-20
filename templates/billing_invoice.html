@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row" style="font-size:14px;">
+            <div class="col-md-7 col-lg-8">
+              <div class="invoice-content">
+                <div class="invoice-item">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="invoice-logo">
+                        <img style="width: 220px;" src="{% static 'HealthStack-System/images/Normal/logo.png' %}" alt="logo">
+                      </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <p class="invoice-details">
+                        <strong>Payment ID:</strong> {{payment.payment_id}} <br>
+                        <strong>Patient ID:</strong> {{payment.patient.patient_id}} <br>
+                        <strong>Date:</strong> {{payment.payment_date}}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="invoice-item">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h1><strong class="customer-text">Billed To:</strong></h1>
+                      <p class="invoice-details">
+                        <b>Name:</b> {{payment.patient.name}}<br>
+                        <b>Email:</b> {{payment.patient.email}}<br>
+                        <b>Phone:</b> {{payment.patient.phone_number}}<br>
+                      </p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <h1><strong class="customer-text">Issued By:</strong></h1>
+                      <p class="invoice-details">
+                        <b>Hospital Name:</b> {{payment.hospital_name}}<br>
+                        <b>Address:</b> {{payment.hospital_address}}<br>
+                        <b>Phone:</b> {{payment.hospital_phone}}<br>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="invoice-item invoice-table-wrap">
+                  <div class="table-responsive">
+                    <table class="invoice-table table table-bordered text-center">
+                      <tr>
+                        <th>Service</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                      </tr>
+                      {% for item in payment.items %}
+                      <tr>
+                        <td>{{ item.service_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.unit_price }}</td>
+                        <td>{{ item.total_price }}</td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+                <div class="text-right mt-3">
+                  <h4><b>Subtotal:</b> {{payment.subtotal}}</h4>
+                  <h4><b>Tax ({{payment.tax_rate}}%):</b> {{payment.tax}}</h4>
+                  <h3><b>Total Amount:</b> {{payment.total}}</h3>
+                  <h4><b>Payment Status:</b> {{payment.payment_status}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+  </body>
+</html>

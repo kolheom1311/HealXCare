@@ -48,11 +48,11 @@
                                     <a href="{% url 'hospital_home'%}">Home</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit Prescription
+                                    View Report
                                 </li>
                             </ol>
                         </nav>
-                        <h2 class="breadcrumb-title">AEditPrescription</h2>
+                        <h2 class="breadcrumb-title">Patient Report</h2>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
 			
 			
 									<div class="patient-details">
-									  <h5><b>ID :</b> {{report.patient.patient_id }}</h5>
+									  <h5><b>ID :</b> {{report.patient.patient_id}}</h5>
 									  <h5 class="mb-0">
 										<i class="fas fa-map-marker-alt"></i>
 										{{ report.patient.address }}
@@ -116,8 +116,8 @@
                                     <div class="col-md-6">
                                         <p class="invoice-details"> 
                                             <strong>Report ID:</strong>{{report.report_id}} <br>
-                                            <strong>Patient ID:</strong> {{patient.patient_id }} <br>
-                                            <strong>Date:</strong> {{report.delivery_date}}
+                                            <strong>Patient ID:</strong> {{report.patient_id}} <br>
+                                            <strong>Date:</strong> {{ report.delivery_date }}
                                         </p>
                                     </div>
                                 </div>
@@ -151,6 +151,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if specimen %}
                             <div class="invoice-item invoice-table-wrap">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -180,7 +181,9 @@
 
                                 </div>
                             </div>
+                            {% endif %}
                             <br>
+                            {% if test %}
                             <div class="invoice-item invoice-table-wrap">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -209,7 +212,7 @@
 
                                 </div>
                             </div>
-
+                            {% endif %}
                             <!-- /Invoice Item -->
 
 
@@ -217,7 +220,6 @@
                             <div class="other-info">
                                 <h4 style="background-color: rgb(84, 147, 199);">Other information</h4>
                                 <p>{{report.other_information}}</p>
-
                                {% comment %}
                                 <button class="btn btn-sm bg-primary-light"> <a target="_blank"
                                         href="{% url 'pdf' pk=report.report_id %}"> Download Report </a></button>

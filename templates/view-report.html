@@ -141,6 +141,7 @@
 										</div>
 									</div>
 								</div>
+								{% if specimen %}
 								<div class="invoice-item invoice-table-wrap">
 									<div class="row">
 										<div class="col-md-12">
@@ -170,9 +171,9 @@
 										
 									</div>
 								</div>
-
-           
+								{% endif %}
                   				<br>
+								{% if test %}
                   				<div class="invoice-item invoice-table-wrap">
 									<div class="row">
 										<div class="col-md-12">
@@ -206,7 +207,7 @@
 										
 									</div>
 								</div>
-                                
+								{% endif %}
 								<!-- /Invoice Item -->
                                 
 								
