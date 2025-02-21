@@ -641,10 +641,7 @@ def booking(request, pk):
             patient_name = appointment.patient.name
             patient_username = appointment.patient.username
             patient_phone_number = appointment.patient.phone_number
-            doctor_name = appointment.doctor.name
-        
-            subject = "Appointment Request"
-            
+            doctor_name = appointment.doctor.name 
             values = {
                     "email":patient_email,
                     "name":patient_name,
@@ -653,19 +650,8 @@ def booking(request, pk):
                     "doctor_name":doctor_name,
                     "message":message,
                 }
-            
-            html_message = render_to_string('appointment-request-mail.html', {'values': values})
-            plain_message = strip_tags(html_message)
-            
-            try:
-                send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found')
-        
-        
         messages.success(request, 'Appointment Booked')
         return redirect('patient-dashboard')
-
     context = {'patient': patient, 'doctor': doctor}
     return render(request, 'booking.html', context)
 

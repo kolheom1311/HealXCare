@@ -425,7 +425,6 @@ def delete_hospital(request, pk):
 	hospital.delete()
 	return redirect('hospital-list')
 
-
 @login_required(login_url='admin_login')
 def generate_random_invoice():
     N = 4
@@ -460,7 +459,6 @@ def create_invoice(request, pk):
 
     context = {'patient': patient,'admin': user}
     return render(request, 'hospital_admin/create-invoice.html', context)
-
 
 @login_required(login_url='admin_login')
 def generate_random_specimen():
@@ -608,7 +606,6 @@ def medicine_list(request):
                             'carts': carts,}
                 return render(request, 'hospital_admin/medicine-list.html',context)
                 
-
 @login_required(login_url='admin_login')
 def generate_random_medicine_ID():
     N = 4
@@ -850,7 +847,6 @@ def admin_doctor_profile(request,pk):
     context = {'doctor': doctor, 'admin': admin, 'experiences': experience, 'educations': education}
     return render(request, 'hospital_admin/doctor-profile.html',context)
 
-
 @csrf_exempt
 @login_required(login_url='admin_login')
 def accept_doctor(request,pk):
@@ -888,7 +884,6 @@ def accept_doctor(request,pk):
 
     messages.success(request, 'Doctor Accepted!')
     return redirect('register-doctor-list')
-
 
 @csrf_exempt
 @login_required(login_url='admin_login')

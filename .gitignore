@@ -5,4 +5,4 @@
 
 # remove build
 /build
-db.sqlite3
+/db.sqlite3
