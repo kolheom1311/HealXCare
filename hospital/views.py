@@ -416,9 +416,12 @@ def patient_dashboard(request):
         prescription = Prescription.objects.filter(patient=patient).order_by('-prescription_id')
         
         # Fetch only the patient's appointments
-        appointments = Appointment.objects.filter(
-            patient=patient
-        ).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed'))
+        # appointments = Appointment.objects.filter(
+        #     patient=patient
+        # ).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed'))
+
+        # Fetch all appointments for the patient (no status filtering)
+        appointments = Appointment.objects.filter(patient=patient)
 
         # ✅ Filter payments only related to the logged-in patient's appointments
         payments = Payment.objects.select_related('appointment__doctor').filter(

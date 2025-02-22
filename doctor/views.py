@@ -382,7 +382,7 @@ def reject_appointment(request, pk):
         "doctor_name": doctor_name
     }
 
-    send_appointment_status_mail(request, patient_email, template_data)
+    # send_appointment_status_mail(request, patient_email, template_data)
     
     messages.error(request, 'Appointment Rejected')
     

@@ -65,7 +65,6 @@
             <div>{% include 'patient-sidebar.html' %}</div>
           </div>
           <!-- / Profile Sidebar -->
-
           <div class="col-md-7 col-lg-8 col-xl-9">
             <div class="card">
               <div class="card-body pt-0">
@@ -135,43 +134,45 @@
                                 {% endif %}
                                 <td>
                                   {% if appointment.appointment_status == 'pending' %}
-                                  <span class="badge badge-pill bg-warning-light">Pending</span>
-                                  {% endif %}
-                                  {% if appointment.appointment_status == 'confirmed' %}
-                                  <span class="badge badge-pill bg-success-light">Confirm</span>
-                                  {% endif %}
-                                  {% if appointment.appointment_status == 'cancelled' %}
-                                  <span class="badge badge-pill bg-danger-light">Cancelled</span>
+                                    <span class="badge badge-pill bg-warning-light">Pending</span>
+                                  {% elif appointment.appointment_status == 'confirmed' %}
+                                    <span class="badge badge-pill bg-success-light">Confirm</span>
+                                  {% elif appointment.appointment_status == 'cancelled' %}
+                                    <span class="badge badge-pill bg-danger-light">Cancelled</span>
                                   {% endif %}
                                 </td>
                                 <td class="text-center">
-                                  {% if appointment.payment_status == 'pending' %}
-                                  <span class="badge badge-pill bg-warning-light">Pending</span>
-                                  {% endif %}
-                                  {% if appointment.payment_status == 'VALID' %}
-                                  <span class="badge badge-pill bg-success-light">Paid</span>
+                                  {% if appointment.appointment_status == 'cancelled' %}
+                                    <span class="badge badge-pill bg-secondary-light">Not Required</span>
+                                  {% elif appointment.payment_status == 'pending' %}
+                                    <span class="badge badge-pill bg-warning-light">Pending</span>
+                                  {% elif appointment.payment_status == 'VALID' %}
+                                    <span class="badge badge-pill bg-success-light">Paid</span>
                                   {% endif %}
                                 </td>
-
+                                
                                 <td>
-                                  {% if appointment.payment_status == 'pending' %}
-                                  <div class="table-action">
-                                    <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
-                                      {% csrf_token %}
-                                      <button type="submit" class="btn btn-sm bg-success-light">
+                                  {% if appointment.appointment_status == 'cancelled' %}
+                                    <div class="table-action">
+                                      <button class="btn btn-sm bg-secondary-light" disabled>
                                         <i class="fas fa-dollar-sign"></i> Pay Now
                                       </button>
-                                    </form>
-                                  </div>
-                                  {% endif %}
-                                  {% if appointment.payment_status == 'VALID' %}
-                                  <div class="table-action">
-                                    <form action="#">
-                                      <button type="submit" class="btn btn-sm bg-info-light">
+                                    </div>
+                                  {% elif appointment.payment_status == 'pending' %}
+                                    <div class="table-action">
+                                      <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm bg-success-light">
+                                          <i class="fas fa-dollar-sign"></i> Pay Now
+                                        </button>
+                                      </form>
+                                    </div>
+                                  {% elif appointment.payment_status == 'VALID' %}
+                                    <div class="table-action">
+                                      <button class="btn btn-sm bg-info-light">
                                         <i class="fas fa-file-invoice"></i> View Invoice
                                       </button>
-                                    </form>
-                                  </div>
+                                    </div>
                                   {% endif %}
                                 </td>
                               </tr>

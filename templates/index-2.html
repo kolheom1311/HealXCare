@@ -1,307 +1,319 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <!-- doccure/index.html  30 Nov 2019 04:12:03 GMT -->
-  <head>
+<!-- doccure/index.html  30 Nov 2019 04:12:03 GMT -->
+
+<head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
     <title>HealXCare</title>
 
     <!-- Favicons -->
-    <link
-      type="image/x-icon"
-      href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
-      rel="icon"
-    />
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
 
     <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"
-    />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
 
     <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
-    />
+    <link rel="stylesheet"
+        href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@emoji-mart/react@latest"></script>
 
     <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/style.css' %}"
-    />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/chatbot.css' %}" />
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="assets/js/html5shiv.min.js"></script>
       <script src="assets/js/respond.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
+</head>
+
+<body>
     <!-- Main Wrapper -->
     <div class="main-wrapper">
-      <!-- Header -->
-      <header class="header">{% include 'navbar_home.html' %}</header>
-      <!-- header -->
+        <!-- Header -->
+        <header class="header">{% include 'navbar_home.html' %}</header>
+        <!-- header -->
 
-      <!-- Home Banner -->
-      <section class="section section-search" style="background-color:rgb(172, 209, 242); padding-bottom: 0px;min-height: 0px;padding-left: 0px;padding-right: 0px;">
-        <div  style="background-color:rgb(172, 209, 242)">
-          <div class="banner-wrapper" style="background-color:rgb(172, 209, 242);padding-bottom: 20px;padding-top: 12px;"> 
-            <div class="banner-header text-center">
-              <h1>Welcome to HealXCare</h1>
-              <p>
-                Healing Made Smarter, Care Made Easier.
-              </p>
+        <!-- Home Banner -->
+        <section class="section section-search"
+            style="background-color:rgb(172, 209, 242); padding-bottom: 0px;min-height: 0px;padding-left: 0px;padding-right: 0px;">
+            <div style="background-color:rgb(172, 209, 242)">
+                <div class="banner-wrapper"
+                    style="background-color:rgb(172, 209, 242);padding-bottom: 20px;padding-top: 12px;">
+                    <div class="banner-header text-center">
+                        <h1>Welcome to HealXCare</h1>
+                        <p>
+                            Healing Made Smarter, Care Made Easier.
+                        </p>
+                    </div>
+                </div>
+                <div class="home-image">
+                    <img src="{% static 'HealthStack-System/images/Normal/p2.png' %}" class="img-fluid"
+                        style="width: 100%;" />
+                </div>
             </div>
+        </section>
+        <!-- /Home Banner -->
 
-           
-            <!-- /Search -->
-          </div>
-          <div class="home-image">
-            <img
-              src="{% static 'HealthStack-System/images/Normal/p2.png' %}"
-              class="img-fluid" style="width: 100%;"
-            />
-          </div>
-        </div>
-      </section>
-      <!-- /Home Banner -->
-
-      <!-- Clinic and Specialities -->
-      <section class="section section-specialities" style="padding-top: 80px">
-        <div class="container-fluid">
-          <div class="section-header text-center">
-            <h2>Clinic and Specialities</h2>
-            <p class="sub-title">
-            </p>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-md-9">
-              <!-- Slider -->
-              <div class="specialities-slider slider">
-                <!-- Slider Item -->
-                <div class="speicality-item text-center">
-                  <div class="speicality-img">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/specialities/specialities-01.png' %}"
-                      class="img-fluid"
-                      alt="Speciality"
-                    />
-                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
-                  </div>
-                  <p>Urology</p>
+        <!-- Clinic and Specialities -->
+        <section class="section section-specialities" style="padding-top: 80px">
+            <div class="container-fluid">
+                <div class="section-header text-center">
+                    <h2>Clinic and Specialities</h2>
+                    <p class="sub-title">
+                    </p>
                 </div>
-                <!-- /Slider Item -->
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
+                        <!-- Slider -->
+                        <div class="specialities-slider slider">
+                            <!-- Slider Item -->
+                            <div class="speicality-item text-center">
+                                <div class="speicality-img">
+                                    <img src="{% static 'HealthStack-System/images/Normal/specialities/specialities-01.png' %}"
+                                        class="img-fluid" alt="Speciality" />
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                                <p>Urology</p>
+                            </div>
+                            <!-- /Slider Item -->
 
-                <!-- Slider Item -->
-                <div class="speicality-item text-center">
-                  <div class="speicality-img">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/specialities/specialities-02.png' %}"
-                      class="img-fluid"
-                      alt="Speciality"
-                    />
-                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
-                  </div>
-                  <p>Neurology</p>
-                </div>
-                <!-- /Slider Item -->
+                            <!-- Slider Item -->
+                            <div class="speicality-item text-center">
+                                <div class="speicality-img">
+                                    <img src="{% static 'HealthStack-System/images/Normal/specialities/specialities-02.png' %}"
+                                        class="img-fluid" alt="Speciality" />
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                                <p>Neurology</p>
+                            </div>
+                            <!-- /Slider Item -->
+                            <!-- Slider Item -->
+                            <div class="speicality-item text-center">
+                                <div class="speicality-img">
+                                    <img src="{% static 'HealthStack-System/images/Normal/specialities/specialities-03.png' %}"
+                                        class="img-fluid" alt="Speciality" />
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                                <p>Orthopedic</p>
+                            </div>
+                            <!-- /Slider Item -->
 
-                <!-- Slider Item -->
-                <div class="speicality-item text-center">
-                  <div class="speicality-img">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/specialities/specialities-03.png' %}"
-                      class="img-fluid"
-                      alt="Speciality"
-                    />
-                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
-                  </div>
-                  <p>Orthopedic</p>
-                </div>
-                <!-- /Slider Item -->
+                            <!-- Slider Item -->
+                            <div class="speicality-item text-center">
+                                <div class="speicality-img">
+                                    <img src="{% static 'HealthStack-System/images/Normal/specialities/specialities-04.png' %}"
+                                        class="img-fluid" alt="Speciality" />
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                                <p>Cardiologist</p>
+                            </div>
+                            <!-- /Slider Item -->
 
-                <!-- Slider Item -->
-                <div class="speicality-item text-center">
-                  <div class="speicality-img">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/specialities/specialities-04.png' %}"
-                      class="img-fluid"
-                      alt="Speciality"
-                    />
-                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
-                  </div>
-                  <p>Cardiologist</p>
+                            <!-- Slider Item -->
+                            <div class="speicality-item text-center">
+                                <div class="speicality-img">
+                                    <img src="{% static 'HealthStack-System/images/Normal/specialities/specialities-05.png' %}"
+                                        class="img-fluid" alt="Speciality" />
+                                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                </div>
+                                <p>Dentist</p>
+                            </div>
+                            <!-- /Slider Item -->
+                        </div>
+                        <!-- /Slider -->
+                    </div>
                 </div>
-                <!-- /Slider Item -->
-
-                <!-- Slider Item -->
-                <div class="speicality-item text-center">
-                  <div class="speicality-img">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/specialities/specialities-05.png' %}"
-                      class="img-fluid"
-                      alt="Speciality"
-                    />
-                    <span><i class="fa fa-circle" aria-hidden="true"></i></span>
-                  </div>
-                  <p>Dentist</p>
-                </div>
-                <!-- /Slider Item -->
-              </div>
-              <!-- /Slider -->
             </div>
-          </div>
-        </div>
-      </section>
-      <!-- Clinic and Specialities -->
+        </section>
+        <!-- Clinic and Specialities -->
 
-      <!-- Popular Section -->
-      <section class="section section-doctor">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="section-header">
-                <h2>Book Our Doctor</h2>
-                <p>From the Best</p>
-              </div>
-              <div class="about-content">
-                <p>
-                  You can book doctors from any hospital from here.
-                </p>
-                <!-- <p>
+        <!-- Popular Section -->
+        <section class="section section-doctor">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="section-header">
+                            <h2>Book Our Doctor</h2>
+                            <p>From the Best</p>
+                        </div>
+                        <div class="about-content">
+                            <p>
+                                You can book doctors from any hospital from here.
+                            </p>
+                            <!-- <p>
                   web page editors now use Lorem Ipsum as their default model
                   text, and a search for 'lorem ipsum' will uncover many web
                   sites still in their infancy. Various versions have evolved
                   over the years, sometimes
                 </p> -->
-                <!-- <a href="javascript:;">Read More..</a> -->
-              </div>
-            </div>
+                            <!-- <a href="javascript:;">Read More..</a> -->
+                        </div>
+                    </div>
 
 
-            <div class="col-lg-8">
-              <div class="doctor-slider slider">
+                    <div class="col-lg-8">
+                        <div class="doctor-slider slider">
 
-                {% for doctor in doctors %}
-                <!-- Doctor Widget -->
-                <div class="profile-widget">
-                  <div class="doc-img">
-                    <a href="#">
-                      <img
-                        class="img-fluid"
-                        alt="User Image"
-                        src="{{ doctor.featured_image.url }}"
-                      />
-                    </a>
-                    <a href="javascript:void(0)" class="fav-btn">
-                      <i class="far fa-bookmark"></i>
-                    </a>
-                  </div>
-                  <div class="pro-content">
-                    <h3 class="title">
-                      <a href="{% url 'doctor-profile' pk=doctor.doctor_id %}">{{doctor.name}}</a>
-                      <i class="fas fa-check-circle verified"></i>
-                    </h3>
-                    <p class="speciality">
-                      {{ doctor.department_name.hospital_department_name }}
-                    </p>
-                    {% comment %} <div class="rating">
-                      <i class="fas fa-star filled"></i>
-                      <i class="fas fa-star filled"></i>
-                      <i class="fas fa-star filled"></i>
-                      <i class="fas fa-star filled"></i>
-                      <i class="fas fa-star filled"></i>
-                      <span class="d-inline-block average-rating">(17)</span>
-                    </div> {% endcomment %}
-                    <ul class="available-info">
-                      <li>
-                        <i class="fas fa-map-marker-alt"></i> {{doctor.hospital_name}}
-                      </li>
-                      <li>
-                        <i class="far fa-clock"></i> {{ doctor.visiting_hour }}
-                      </li>
-                      <li>
-                        <i class="far fa-money-bill-alt"></i> Consulation fee: ₹ {{ doctor.consultation_fee }}
-                        <i
-                          class="fas fa-info-circle"
-                          data-toggle="tooltip"
-                          title="Lorem Ipsum"
-                        ></i>
-                      </li>
-                    </ul>
-                    
-                  </div>
+                            {% for doctor in doctors %}
+                            <!-- Doctor Widget -->
+                            <div class="profile-widget">
+                                <div class="doc-img">
+                                    <a href="#">
+                                        <img class="img-fluid" alt="User Image" src="{{ doctor.featured_image.url }}" />
+                                    </a>
+                                    <a href="javascript:void(0)" class="fav-btn">
+                                        <i class="far fa-bookmark"></i>
+                                    </a>
+                                </div>
+                                <div class="pro-content">
+                                    <h3 class="title">
+                                        <a href="{% url 'doctor-profile' pk=doctor.doctor_id %}">{{doctor.name}}</a>
+                                        <i class="fas fa-check-circle verified"></i>
+                                    </h3>
+                                    <p class="speciality">
+                                        {{ doctor.department_name.hospital_department_name }}
+                                    </p>
+                                    {% comment %} <div class="rating">
+                                        <i class="fas fa-star filled"></i>
+                                        <i class="fas fa-star filled"></i>
+                                        <i class="fas fa-star filled"></i>
+                                        <i class="fas fa-star filled"></i>
+                                        <i class="fas fa-star filled"></i>
+                                        <span class="d-inline-block average-rating">(17)</span>
+                                    </div> {% endcomment %}
+                                    <ul class="available-info">
+                                        <li>
+                                            <i class="fas fa-map-marker-alt"></i> {{doctor.hospital_name}}
+                                        </li>
+                                        <li>
+                                            <i class="far fa-clock"></i> {{ doctor.visiting_hour }}
+                                        </li>
+                                        <li>
+                                            <i class="far fa-money-bill-alt"></i> Consulation fee: ₹ {{
+                                            doctor.consultation_fee }}
+                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <!-- /Doctor Widget -->
+                            {% endfor %}
+
+
+
+                        </div>
+                    </div>
+
                 </div>
-                <!-- /Doctor Widget -->
-                {% endfor %}
-
-
-               
-              </div>
             </div>
+        </section>
+        <!-- /Popular Section -->
 
-          </div>
-        </div>
-      </section>
-      <!-- /Popular Section -->
+        <!-- Availabe Features -->
+        <section class="section section-features">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-5 features-img">
+                        <img src="{% static 'HealthStack-System/images/Normal/pppp.jpg' %}" class="img-fluid"
+                            alt="Feature" />
+                    </div>
+                    <div class="col-md-7">
+                        <div class="section-header">
+                            <h2 class="mt-2">Available Hospitals</h2>
+                            <p>
+                                Here You can access multiple hospitals. You can book your appointment from
+                                your doctor & can collect all hospital infromations from here.
+                            </p>
+                        </div>
+                        <div class="features-slider slider">
+                            <!-- Slider Item -->
+                            {% for hospital in hospitals %}
+                            <div class="feature-item text-center">
+                                <img src="{{ hospital.featured_image.url }}" class="img-fluid" alt="Feature" />
+                                <p>{{hospital.name}}</p>
+                            </div>
+                            {% endfor %}
+                            <!-- /Slider Item -->
 
-      <!-- Availabe Features -->
-      <section class="section section-features">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-5 features-img">
-              <img
-                src="{% static 'HealthStack-System/images/Normal/pppp.jpg' %}"
-                class="img-fluid"
-                alt="Feature"
-              />
-            </div>
-            <div class="col-md-7">
-              <div class="section-header">
-                <h2 class="mt-2">Available Hospitals</h2>
-                <p>
-                  Here You can access multiple hospitals. You can book your appointment from
-                  your doctor & can collect all hospital infromations from here.
-                </p>
-              </div>
-              <div class="features-slider slider">
-                <!-- Slider Item -->
-                {% for hospital in hospitals %}
-                <div class="feature-item text-center">
-                  <img
-                    src="{{ hospital.featured_image.url }}"
-                    class="img-fluid"
-                    alt="Feature"
-                  />
-                  <p>{{hospital.name}}</p>
+
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
-                <!-- /Slider Item -->
-
-                
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
-      <!-- Availabe Features -->
+            <!-- Chatbot Toggler -->
+            <button id="chatbot-toggler">
+                <span class="material-symbols-rounded">mode_comment</span>
+                <span class="material-symbols-rounded">close</span>
+            </button>
 
-      <!-- Footer -->
-      {% include 'footer.html' %}
-      <!-- /Footer -->
+            <!-- Chatbot Window -->
+            <div class="chatbot-popup">
+                <!-- Chatbot Header -->
+                <div class="chat-header">
+                    <div class="header-info">
+                        <svg class="chatbot-logo" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                            viewBox="0 0 1024 1024">
+                            <path
+                                d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z">
+                        </svg>
+                        <h2 class="logo-text">Chatbot</h2>
+                    </div>
+                    <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</button>
+                </div>
+                <!-- Chatbot Body -->
+                <div class="chat-body">
+                    <div class="message bot-message">
+                        <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                            viewBox="0 0 1024 1024">
+                            <path
+                                d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z">
+                        </svg>
+                        <!-- prettier-ignore -->
+                        <div class="message-text"> Hey there <br> How can I help you today? </div>
+                    </div>
+                </div>
+                <!-- Chatbot Footer -->
+                <div class="chat-footer">
+                    <form action="#" class="chat-form">
+                        <textarea placeholder="Message..." class="message-input" required></textarea>
+                        <div class="chat-controls">
+                            <button type="button" id="emoji-picker"
+                                class="material-symbols-outlined">sentiment_satisfied</button>
+                            <div class="file-upload-wrapper">
+                                <input type="file" accept="image/*" id="file-input" hidden>
+                                <img src="#">
+                                <button type="button" id="file-upload"
+                                    class="material-symbols-rounded">attach_file</button>
+                                <button type="button" id="file-cancel" class="material-symbols-rounded">close</button>
+                            </div>
+                            <button type="submit" id="send-message"
+                                class="material-symbols-rounded">arrow_upward</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!-- Availabe Features -->
+
+        <!-- Footer -->
+        {% include 'footer.html' %}
+        <!-- /Footer -->
     </div>
     <!-- /Main Wrapper -->
 
+
+    <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
     <!-- jQuery -->
     <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
 
@@ -309,21 +321,19 @@
     <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
     <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
 
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
-    />
+    <link rel="stylesheet"
+        href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
 
     <!-- Slick JS -->
     <script src="{% static 'HealthStack-System/Outside_assets/js/slick.js' %}"></script>
 
     <!-- Custom JS -->
     <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-  </body>
 
-  <!-- doccure/index.html  30 Nov 2019 04:12:03 GMT -->
+    <script src="{% static 'HealthStack-System/js/chatbot.js' %}"></script>
+</body>
+
+<!-- doccure/index.html  30 Nov 2019 04:12:03 GMT -->
+
 </html>
