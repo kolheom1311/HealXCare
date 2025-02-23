@@ -13,6 +13,8 @@ from .pres_pdf import prescription_pdf
 urlpatterns = [
     path('', views.hospital_home, name='hospital_home'),
     path('search/', views.search, name='search'),
+    path("send-otp/", views.send_otp_view, name="send_otp"),
+    path("verify-otp/", views.verify_otp_view, name="verify_otp"),
     path('change-password/<int:pk>', views.change_password, name='change-password'),
     path('payments/', include('payments.urls')),
     path('add-billing/', views.add_billing, name='add-billing'),

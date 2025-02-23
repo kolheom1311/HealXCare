@@ -1,4 +1,6 @@
 from multiprocessing import context
+import random
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import CustomUserCreationForm, PasswordResetForm
@@ -16,6 +18,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from django.core.cache import cache
 from .utils import searchDoctors, searchHospitals, searchDepartmentDoctors, paginateHospitals
 from .models import Patient, User
 from doctor.models import *
@@ -30,6 +33,7 @@ from healthstack.emails import *  # Import the ZeptoMail function
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
+from healthstack.twilio_service import send_otp
 # import razorpay
 # from razorpay import Payment
 import os
@@ -405,6 +409,54 @@ def activate_account(request, uidb64, token):
 
     messages.error(request, 'Activation link is invalid or expired.')
     return redirect('patient-register')
+
+
+# Function to normalize phone number (remove spaces and special characters)
+def normalize_phone_number(phone_number):
+    return re.sub(r'\D', '', phone_number)  # Keep only digits
+
+@csrf_exempt
+@login_required(login_url="login")
+@cache_control(must_revalidate=True)
+def send_otp_view(request):
+    if request.method == "POST":
+        phone_number = request.POST.get("phone_number").replace(" ", "")  # Remove spaces
+        # phone_number = "+91 9307527369"
+        normalized_phone = normalize_phone_number(phone_number)  # Normalize phone number
+        otp = random.randint(100000, 999999)
+        
+        # Store OTP in cache (valid for 5 minutes)
+        cache_key = f"otp_{normalized_phone}"
+        cache.set(cache_key, otp, timeout=300)
+
+        print(f"OTP for {normalized_phone}: {otp}")  # ✅ Debugging
+        
+        send_otp(phone_number, otp)
+        return JsonResponse({"message": "OTP sent successfully."})
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+@login_required(login_url="login")
+@cache_control(must_revalidate=True)
+def verify_otp_view(request):
+    if request.method == "POST":
+        phone_number = request.POST.get("phone_number").replace(" ", "")  # Remove spaces
+        # phone_number = "+91 91370 77543"
+        normalized_phone = normalize_phone_number(phone_number)  # Normalize phone number
+        entered_otp = request.POST.get("otp")
+
+        cache_key = f"otp_{normalized_phone}"
+        stored_otp = cache.get(cache_key)
+
+        print(f"Stored OTP for {normalized_phone}: {stored_otp}")  # ✅ Debugging
+        
+        if stored_otp and str(stored_otp) == entered_otp:
+            return JsonResponse({"message": "OTP verified successfully."})
+        else:
+            return JsonResponse({"error": "Invalid OTP or OTP expired."}, status=400)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 @csrf_exempt
 @login_required(login_url="login")
