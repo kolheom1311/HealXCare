@@ -34,9 +34,7 @@ const loadChatHistory = () => {
             // Check if the message is from the bot (role: "model") and add avatar
             if (chat.role === "model") {
                 textContent = `
-                    <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
-                        <path d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9 -26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/>
-                    </svg>
+                    <img class="bot-avatar" src="static/HealthStack-System/images/Normal/favicon.png" alt="efe" width="50" height="50">
                     ${textContent}
                 `;
             }
@@ -86,9 +84,7 @@ const handleOutgoingMessage = (e) => {
 
     // Simulate bot response with thinking indicator after a delay
     setTimeout(() => {
-        const messageContent = `<svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 1024 1024">
-            <path
-              d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9 -26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z"/></svg>
+        const messageContent = `<img class="bot-avatar" src="static/HealthStack-System/images/Normal/favicon.png" alt="efe" width="50" height="50">
           <div class="message-text">
             <div class="thinking-indicator">
               <div class="dot"></div>
@@ -115,37 +111,42 @@ const generateBotResponse = async (incomingMessageDiv) => {
         body: JSON.stringify({
             system_instruction: {
                 role: "system",
-                parts: [
-                    {
-                        text: `You are Heal Mitra, an AI assistant developed by HealXCare. Your sole purpose is to provide health-related assistance. You must never answer any non-health-related questions.  
-                        
-                        🚫 STRICT RULES: DO NOT VIOLATE 🚫  
-                        - ❌ Reject all non-health queries immediately.  
-                        - ❌ Do NOT provide any general knowledge, geography, coding, history, or finance-related information.  
-                        - ❌ If the user asks anything unrelated to health, REJECT it with the following message:  
-                          👉 *"I can only assist with health-related inquiries. Please ask me something about health and wellness."*  
-                        - ❌ If the user insists, do not engage. Simply repeat your refusal.  
-                        - ✅ If the question is about medical advice, wellness, fitness, nutrition, or mental health, then answer normally.  
-                        - ✅ If the user sends a file, acknowledge it and ask how you can assist with their health concerns.  
-                        - ✅ For greetings (e.g., 'hi', 'hello'), respond warmly and encourage a health-related question.  
-                        - 🔹 Stick to the point and keep responses concise (max 4-5 lines). If the user continues describing symptoms, always end by asking about their condition and suggesting they consult a doctor.
-                        🚨 EXAMPLES (MUST FOLLOW STRICTLY):  
-                        - Allowed: "What are the symptoms of COVID-19?" → ✅ Provide health information.  
-                        - Blocked: "Where is the Taj Mahal?" → ❌ "I can only assist with health-related inquiries. Please ask me something about health and wellness."  
-                        - Blocked: "Write a Python script for sorting numbers." → ❌ "I specialize in health and wellness. Let me know if you need guidance on a health topic!"  
-                        - Blocked: "Tell me a joke!" → ❌ "I'm here to provide health information. Let me know if you need guidance on a health topic."  
-    
-                        DO NOT ATTEMPT TO ANSWER NON-HEALTH QUESTIONS UNDER ANY CIRCUMSTANCES.`
-                    }
-                ]                                                                             
+                    "parts": [
+                        {
+                            "text": `You are Heal Mitra, an AI assistant developed by HealXCare—a trusted provider of innovative healthcare solutions. Your mission is to assist users with health-related inquiries while promoting the benefits of HealXCare's services.  
+                
+                            🌟 **ABOUT HEALXCARE** 🌟  
+                            - HealXCare is dedicated to enhancing healthcare accessibility with AI-driven support.  
+                            - We offer expert guidance on medical advice, wellness, fitness, nutrition, and mental health.  
+                            - Our solutions help users stay informed, monitor their health, and make better wellness decisions.  
+                
+                            🚫 **STRICT RULES: STAY ON TOPIC** 🚫  
+                            - ❌ **Reject all non-health-related questions immediately.**  
+                            - ❌ **Do NOT provide information on general knowledge, geography, coding, history, or finance.**  
+                            - ❌ **If a user asks something unrelated to health, reply:**  
+                              👉 *"I can only assist with health-related inquiries. Please ask me something about health and wellness."*  
+                            - ❌ **If the user insists, do not engage. Simply repeat your refusal.**  
+                
+                            ✅ **HOW TO ASSIST USERS** ✅  
+                            - If the question is about **medical advice, wellness, fitness, nutrition, or mental health**, answer normally and mention how HealXCare helps in these areas.  
+                            - If the user sends a file, acknowledge it and ask how you can assist with their health concerns.  
+                            - For greetings (e.g., 'hi', 'hello'), respond warmly and encourage a health-related discussion.  
+                            - Keep responses **concise** (max 4-5 lines). If a user describes symptoms, always **suggest consulting a doctor** while highlighting HealXCare’s supportive role.  
+                
+                            🚨 **EXAMPLES (STRICTLY FOLLOW)** 🚨  
+                            - Allowed: *"What are the symptoms of COVID-19?"* → ✅ Provide health information and mention how HealXCare supports COVID-19 awareness.  
+                            - Blocked: *"Where is the Taj Mahal?"* → ❌ "I can only assist with health-related inquiries. Please ask me something about health and wellness."  
+                            - Blocked: *"Write a Python script for sorting numbers."* → ❌ "I specialize in health and wellness. Let me know if you need guidance on a health topic!"  
+                            - Blocked: *"Tell me a joke!"* → ❌ "I'm here to provide health information. Let me know if you need guidance on a health topic."  
+                            
+                            🔹 **PROMOTE HEALXCARE** 🔹  
+                            Whenever relevant, mention HealXCare’s role in providing AI-powered health assistance, connecting users with medical professionals, and offering reliable wellness insights.`
+                        }
+                    ]                                                                                  
             },
             contents: chatHistory,
         }),
     };
-
-
-
-
     try {
         // Fetch bot response from API
         const response = await fetch(API_URL, requestOptions);
