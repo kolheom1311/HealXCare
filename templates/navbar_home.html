@@ -35,7 +35,7 @@
         <a href="{% url 'hospital_home' %}" style="text-decoration: none;">Home</a>
       </li>
 
-      {% if user.is_authenticated and user.is_patient%}
+      {% if user.is_authenticated and user.is_patient %}
       <li><a href="{% url 'patient-dashboard' %}" style="text-decoration: none;">Patient Dashboard</a></li>
       {% endif %}
 
@@ -47,17 +47,32 @@
         <a href="{% url 'about-us' %}" style="text-decoration: none;">About Us</a>
       </li>
 
-      {% if user.is_authenticated and user.is_doctor or user.is_patient%}
+      {% if user.is_authenticated and user.is_doctor or user.is_patient %}
       <li><a href="{% url 'multiple-hospital' %}" style="text-decoration: none;">Hospital</a></li>
       {% endif %}
-        
+
       {% if user.is_authenticated and user.is_patient %}
       <li><a href="{% url 'search' %}" style="text-decoration: none;">Search Doctor</a></li>
       {% endif %}
-
+      
       {% if not user.is_authenticated or user.is_patient %}
       <li>
-        <a href="{% url 'Health-Advice' %}" style="text-decoration: none;">Health Advice</a>
+        <a href="{% url 'health-advice:health_advice' %}" style="text-decoration: none;">Health Advice</a>
+      </li>
+      {% endif %}
+      
+      {% if not user.is_authenticated and '/health-advice/' in request.path %}
+      <li class="has-submenu">
+        <a href="#">Asanas <i class="fas fa-chevron-down"></i></a>
+        <ul class="submenu">
+          <li><a href="{% url 'health-advice:balasana' %}">Balasana</a></li>
+          <li><a href="{% url 'health-advice:pranayam' %}">Pranayam</a></li>
+          <li><a href="{% url 'health-advice:boatpose' %}">Boat Pose</a></li>
+          <li><a href="{% url 'health-advice:suryanamaskar' %}">Surya Namaskar</a></li>
+          <li><a href="{% url 'health-advice:cobra-pose' %}">Cobra Pose</a></li>
+          <li><a href="{% url 'health-advice:tree-pose' %}">Tree Pose</a></li>
+          <li><a href="{% url 'health-advice:tadasana' %}">Tadasana</a></li>
+        </ul>
       </li>
       {% endif %}
 

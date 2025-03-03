@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://kit.fontawesome.com/9aa6408b7e.js" crossorigin="anonymous"></script>
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
+    <!-- <link rel="stylesheet" href="../static/HealthStack-System/css/HealthAdvice/style.css"> -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/HealthAdvice/style.css' %}">
+    <title>Health Advice</title>
+</head>
+
+<body>
+
+    <!-- <nav>
+        <div class="logo">
+            <span class="material-symbols-outlined">
+                self_improvement
+            </span>
+        </div>
+        <ul class="navlinks">
+            <li> <a href="#">Home</a></li>
+            <li> <a href="#ailment">Ailments</a></li>
+            <li class="dropdown"> Asanas
+                <div class="dropdown-content">
+                    <a href="html/balasana.html">Balasana</a>
+                    <a href="html/pranayam.html">Pranayam</a>
+                    <a href="html/paripurnanavasana.html">Boat Pose</a>
+                    <a href="html/suryanamaskar.html">Surya Namaskar</a>
+                    <a href="html/cobra.html">Cobra Pose</a>
+                    <a href="html/varkasana.html">Tree Pose</a>
+                    <a href="html/tadasana.html">Tadasana</a>
+                </div>
+            </li>
+            <li> <a href="#contactus">Contact us</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+
+    </nav> -->
+
+    <!-- Header -->
+    {% if not user.is_authenticated%}
+    <header class="header">{% include 'navbar_home.html' %}</header>
+    {% endif %}
+    {% if user.is_authenticated and user.is_doctor %}
+    <header class="header">{% include 'doctor-navbar.html' %}</header>
+    {% endif %}
+    {% if user.is_authenticated and user.is_patient %}
+    <header class="header">{% include 'patient_navbar.html' %}</header>
+    {% endif %}
+    <!-- /Header -->
+
+    <!-- text on home page -->
+    <div class="health-advice">
+        <header id="showcase" style="background-image: url(../static/images/bg4.jpg);">
+            <h1> HealXCare </h1>
+            <p>
+                Yoga helps you in forming perfect harmony between your body and your mind.
+            </p>
+            <a href="#ailment" class="button">Read more</a>
+        </header>
+
+        <!-- ailments page -->
+        <div id="ailment">
+            <section class="cards">
+                <h1>Select your ailment!</h1>
+                <div class="search-box">
+                    <div class="search-input">
+                        <input type="text" placeholder="Type to search..">
+                        <div class="autocom-box">
+                        </div>
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                </div>
+                <div class="cue">
+                    <!-- six boxes for six different ailments -->
+                    <div class="box">
+                        <a href="{% url 'health-advice:digestive' %}">
+                            <img src="{% static 'HealthStack-System\images\HealthAdvice\digestive.jpg' %}" alt="digestive">
+                            <div class="dis">Digestive disorders</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="{% url 'health-advice:heartdisease' %}">
+
+                            <img src="{% static 'HealthStack-System\images\HealthAdvice\heart.jpg' %}" alt="heart Diseases">
+                            <div class="dis"> Heart problem</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="{% url 'health-advice:depression' %}">
+                            <img src="{% static 'HealthStack-System\images\HealthAdvice\anxiety.jpg' %}" alt="anxiety">
+                            <div class="dis"> Anxiety/panic </div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="{% url 'health-advice:asthama' %}">
+                            <img src="../static/images/asthma.jpg" alt="asthma">
+                            <div class="dis"> Asthma</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="{% url 'health-advice:jointpain' %}">
+                            <img src="../static/images/pain.jpg" alt="back pain">
+                            <div class="dis"> Joint pain</div>
+                        </a>
+                    </div>
+
+                    <div class="box">
+                        <a href="{% url 'health-advice:diabetes' %}">
+                            <img src="../static/images/diabetes.jpg" alt="diabetes">
+                            <div class="dis">Diabetes</div>
+                        </a>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <!-- Contact Us page -->
+        <div id="contactus">
+            <form action="#" method="POST">
+                <section class="contact">
+                    <h1>Contact Us</h1>
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="text" placeholder="Name" name="name" required>
+                    <input type="email" placeholder="Email" name="email" required>
+                    <textarea type="text" class="message" name="Message"
+                        placeholder="Type your message here"></textarea>
+                    <button type="submit"> Send</button>
+                </section>
+            </form>
+        </div>
+    </div>
+
+    <!-- <footer class="footer">
+        <p>Be a part of our community today.</p><br>
+        <div class="foot">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        </div>
+
+    </footer> -->
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+    <!-- /Footer -->
+</body>
+
+</html>

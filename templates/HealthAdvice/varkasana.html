@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Varkasana</title>
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/HealthAdvice/styleasana.css' %}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    {% if not user.is_authenticated%}
+    <header class="header">{% include 'navbar_home.html' %}</header>
+    {% endif %}
+    {% if user.is_authenticated and user.is_doctor %}
+    <header class="header">{% include 'doctor-navbar.html' %}</header>
+    {% endif %}
+    {% if user.is_authenticated and user.is_patient %}
+    <header class="header">{% include 'patient_navbar.html' %}</header>
+    {% endif %}
+    <!-- /Header -->
+
+    <div class="health-advice">
+        <div class="title">
+            <div id="mainPage"><a href="{% url 'health-advice:health_advice' %}"> <span>&#x2190</span> Home Page</a></div>
+            <div class="asanaTitle">
+                <p>Varkasana - Tree Pose</p>
+            </div>
+            <div class="asanasubtitle">A classic standing posture, Vrksasana establishes strength and balance, and helps
+                you feel centered, steady and grounded.</div>
+        </div>
+        <div class="HealthAdvice-Container">
+            <div id="intro">Vrksasana (Tree Pose) teaches you to simultaneously press down and feel rooted as you reach
+                tall like the branches of a mighty tree. In this pose, you find a sense of groundedness through the
+                strength of your standing leg. Bringing the sole of your opposite foot to your shin or thigh challenges
+                your balance. Continuously engage your ankles, legs, and core and notice what tiny movements your body
+                might make to help you stay balanced.<br> <br>
+                By strengthening your legs, glutes, core, and back, Tree Pose can improve your posture and alignment,
+                which is especially helpful if you sit throughout the day.<br> <br>
+                This standing posture can help improve your balance, as well as your postural and body awareness. In
+                addition to its physical benefits, this pose can assist in calming and relaxing the mind—relieving
+                anxious thoughts and feelings.
+            </div> <br>
+
+            <div class="stepstofollow">
+                <h1>Steps to do Vrksasana:</h1>
+                <div class="step">
+                    <div class="img"><img src="{% static 'HealthStack-System\images\HealthAdvice\varkasana.jpg' %}" alt="Yoga pose"></div>
+                    <p class="asanadesc">
+                    <ol>
+                        <li>Stand in Tadasana. Spread your toes, press your feet into the mat and firm your leg muscles.
+                            Raise your front hip points toward your lower ribs to gently lift in your lower belly.</li>
+                        <li>Inhale deeply, lifting your chest, and exhale as you draw your shoulder blades down your
+                            back. Look straight ahead at a steady gazing spot.</li>
+                        <li>Place your hands on your hips and raise your right foot high onto your left thigh or shin.
+                            Avoid making contact with the knee.</li>
+                        <li>Press your right foot and left leg into each other.</li>
+                        <li>Check that your pelvis is level and squared to the front.</li>
+                        <li>When you feel steady, place your hands into Anjali Mudra at the heart or stretch your arms
+                            overhead like branches reaching into the sun.</li>
+                        <li>Hold for several breaths, then step back into Mountain Pose and repeat on the other side.
+                        </li>
+                    </ol>
+                    </p> <br> <br>
+                </div>
+
+            </div>
+            <div class="ytVedioSteps">
+                <p>You can even try Tree Pose by following the simple steps through this video guide: </p>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/shVXrsqiKWA?si=cpHmAUA8YrAGt7mt"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+    <!-- /Footer -->
+
+    <!-- Bootstrap JS (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

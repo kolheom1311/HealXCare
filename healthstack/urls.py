@@ -15,8 +15,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from django.http import JsonResponse
-from healthstack.emails import send_zeptomail  # Import the ZeptoMail function
 from django.conf.urls.static import static
 from hospital import views
 # For forgot password views and reset password views
@@ -33,6 +31,7 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('redirect-after-google-login/', views.redirect_after_google_login, name='redirect_after_google_login'),
     path('', include('hospital.urls')),
+    path('health-advice/', include('HealthAdvice.urls')),
     path('doctor/', include('doctor.urls')),
     path('api/', include('api.urls')),
     path('hospital_admin/', include('hospital_admin.urls')),

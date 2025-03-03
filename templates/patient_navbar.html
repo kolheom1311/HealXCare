@@ -48,14 +48,6 @@
         <ul class="submenu">
           <li><a href="{% url 'multiple-hospital' %}">Hospital Info</a></li>
           <li><a href="{% url 'search' %}">Search Doctor</a></li>
-          
-          <!-- <li><a href="#">Checkout</a></li> -->
-          <!-- <li>
-            <a href="">Booking Success</a>
-          </li> -->
-          
-          <!-- <li><a href="#">Favourites</a></li> -->
-          <!-- <li><a href="#">Chat</a></li> -->
         </ul>
       </li>
 
@@ -69,31 +61,21 @@
         <a href="{% url 'pharmacy_shop' %}">Medical Shop</a>
       </li>
 
-      <li>
-        <a href="{% url 'Health-Advice' %}" style="text-decoration: none;">Health Advice</a>
+      {% if user.is_authenticated and user.is_patient and '/health-advice/' in request.path %}
+      <li class="has-submenu">
+        <a href="#">Asanas <i class="fas fa-chevron-down"></i></a>
+        <ul class="submenu">
+          <li><a href="{% url 'health-advice:balasana' %}">Balasana</a></li>
+          <li><a href="{% url 'health-advice:pranayam' %}">Pranayam</a></li>
+          <li><a href="{% url 'health-advice:boatpose' %}">Boat Pose</a></li>
+          <li><a href="{% url 'health-advice:suryanamaskar' %}">Surya Namaskar</a></li>
+          <li><a href="{% url 'health-advice:cobra-pose' %}">Cobra Pose</a></li>
+          <li><a href="{% url 'health-advice:tree-pose' %}">Tree Pose</a></li>
+          <li><a href="{% url 'health-advice:tadasana' %}">Tadasana</a></li>
+        </ul>
       </li>
       {% endif %}
-      <!-- <li class="has-submenu">
-                  <a href="#">Pages <i class="fas fa-chevron-down"></i></a>
-                  <ul class="submenu">
-                    <li><a href="voice-call.html">Voice Call</a></li>
-                    <li><a href="video-call.html">Video Call</a></li>
-                    <li><a href="search.html">Search Doctors</a></li>
-                    <li><a href="calendar.html">Calendar</a></li>
-                    <li><a href="components.html">Components</a></li>
-                    <li class="has-submenu">
-                      <a href="invoices.html">Invoices</a>
-                      <ul class="submenu">
-                        <li><a href="invoices.html">Invoices</a></li>
-                        <li><a href="invoice-view.html">Invoice View</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="blank-page.html">Starter Page</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="forgot-password.html">Forgot Password</a></li>
-                  </ul>
-                </li> -->
+      {% endif %}
     </ul>
   </div>
   <ul class="nav header-navbar-rht">
