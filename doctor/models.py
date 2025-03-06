@@ -1,12 +1,9 @@
 from django.db import models
 
-import uuid
-
 # import django user model
 from hospital.models import Hospital_Information, User, Patient
 from hospital_admin.models import hospital_department, specialization, service
 from django.conf import settings
-
 
 # # Create your models here.
 
@@ -22,7 +19,6 @@ django field types --> google it  # every field types has field options
 Django automatically creates id field for each model class which will be a PK # primary_key=True --> if u want to set manual
 """
 # Create your models here.
-
 
 class Doctor_Information(models.Model):
     DOCTOR_TYPE = (
@@ -49,7 +45,7 @@ class Doctor_Information(models.Model):
 
     email = models.EmailField(max_length=200, null=True, blank=True)
     phone_number = models.CharField(max_length=200, null=True, blank=True)
-    nid = models.CharField(max_length=200, null=True, blank=True)
+    regid = models.CharField(max_length=200, null=True, blank=True)  # registration id
     visiting_hour = models.CharField(max_length=200, null=True, blank=True)
     consultation_fee = models.IntegerField(null=True, blank=True)
     report_fee = models.IntegerField(null=True, blank=True)
@@ -74,7 +70,6 @@ class Doctor_Information(models.Model):
 
     def __str__(self):
         return str(self.user.username)
-
 
 class Appointment(models.Model):
     # ('database value', 'display_name')
@@ -125,7 +120,6 @@ class Experience(models.Model):
     def __str__(self):
         return str(self.doctor.name)
 
-
 class Report(models.Model):
     report_id = models.AutoField(primary_key=True)
     doctor = models.ForeignKey(Doctor_Information, on_delete=models.SET_NULL, null=True, blank=True)
@@ -164,7 +158,6 @@ class Test(models.Model):
     
     def __str__(self):
         return str(self.report.report_id)
-
         
 class Prescription(models.Model):
     # medicine name, quantity, days, time, description, test, test_descrip
@@ -216,7 +209,6 @@ class Prescription_test(models.Model):
 
     def __str__(self):
         return str(self.prescription.prescription_id)
-    
 # # test cart system
 class testCart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='test_cart')
@@ -267,3 +259,4 @@ class Doctor_review(models.Model):
 
     def __str__(self):
         return str(self.patient.username)
+    

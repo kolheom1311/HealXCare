@@ -142,7 +142,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
                             🔹 **PROMOTE HEALXCARE** 🔹  
                             Whenever relevant, mention HealXCare’s role in providing AI-powered health assistance, connecting users with medical professionals, and offering reliable wellness insights.`
                         }
-                    ]                                                                                  
+                    ]                                                                            
             },
             contents: chatHistory,
         }),

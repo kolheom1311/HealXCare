@@ -314,7 +314,7 @@ def doctor_dashboard(request):
             return render(request, 'doctor-dashboard.html', context)
         else:
             return redirect('doctor-login')
- 
+        
 # @csrf_exempt
 # @login_required(login_url="doctor-login")
 # def appointments(request):
@@ -548,7 +548,7 @@ def doctor_profile_settings(request):
             description = request.POST.get('description')
             consultation_fee = request.POST.get('consultation_fee')
             report_fee = request.POST.get('report_fee')
-            nid = request.POST.get('nid')
+            regid = request.POST.get('regid')
             visit_hour = request.POST.get('visit_hour')
             location = request.POST.get('doctor-location')
 
@@ -566,7 +566,7 @@ def doctor_profile_settings(request):
             doctor.description = description
             doctor.consultation_fee = consultation_fee
             doctor.report_fee = report_fee
-            doctor.nid = nid
+            doctor.nid = regid
             doctor.visiting_hour = visit_hour
             doctor.location = location
             doctor.featured_image = featured_image
