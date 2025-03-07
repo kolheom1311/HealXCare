@@ -134,45 +134,47 @@
                                 {% endif %}
                                 <td>
                                   {% if appointment.appointment_status == 'pending' %}
-                                    <span class="badge badge-pill bg-warning-light">Pending</span>
+                                  <span class="badge badge-pill bg-warning-light">Pending</span>
                                   {% elif appointment.appointment_status == 'confirmed' %}
-                                    <span class="badge badge-pill bg-success-light">Confirm</span>
+                                  <span class="badge badge-pill bg-success-light">Confirm</span>
                                   {% elif appointment.appointment_status == 'cancelled' %}
-                                    <span class="badge badge-pill bg-danger-light">Cancelled</span>
+                                  <span class="badge badge-pill bg-danger-light">Cancelled</span>
                                   {% endif %}
                                 </td>
                                 <td class="text-center">
                                   {% if appointment.appointment_status == 'cancelled' %}
-                                    <span class="badge badge-pill bg-secondary-light">Not Required</span>
+                                  <span class="badge badge-pill bg-secondary-light">Not Required</span>
                                   {% elif appointment.payment_status == 'pending' %}
-                                    <span class="badge badge-pill bg-warning-light">Pending</span>
+                                  <span class="badge badge-pill bg-warning-light">Pending</span>
                                   {% elif appointment.payment_status == 'VALID' %}
-                                    <span class="badge badge-pill bg-success-light">Paid</span>
+                                  <span class="badge badge-pill bg-success-light">Paid</span>
                                   {% endif %}
                                 </td>
-                                
+
                                 <td>
                                   {% if appointment.appointment_status == 'cancelled' %}
-                                    <div class="table-action">
-                                      <button class="btn btn-sm bg-secondary-light" disabled>
+                                  <div class="table-action">
+                                    <button class="btn btn-sm bg-secondary-light" disabled>
+                                      <i class="fas fa-dollar-sign"></i> Pay Now
+                                    </button>
+                                  </div>
+                                  {% elif appointment.payment_status == 'pending' %}
+                                  <div class="table-action">
+                                    <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
+                                      {% csrf_token %}
+                                      <button type="submit" class="btn btn-sm bg-success-light">
                                         <i class="fas fa-dollar-sign"></i> Pay Now
                                       </button>
-                                    </div>
-                                  {% elif appointment.payment_status == 'pending' %}
-                                    <div class="table-action">
-                                      <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm bg-success-light">
-                                          <i class="fas fa-dollar-sign"></i> Pay Now
-                                        </button>
-                                      </form>
-                                    </div>
+                                    </form>
+                                  </div>
                                   {% elif appointment.payment_status == 'VALID' %}
-                                    <div class="table-action">
-                                      <button class="btn btn-sm bg-info-light">
-                                        <i class="fas fa-file-invoice"></i> View Invoice
-                                      </button>
-                                    </div>
+                                  <div class="table-action">
+                                    <a href="#"
+                                      class="btn btn-sm bg-info-light">
+                                      <i class="fas fa-file-invoice"></i> View Invoice
+                                    </a>
+                                  </div>
+
                                   {% endif %}
                                 </td>
                               </tr>
@@ -216,11 +218,13 @@
 
                                 <td>
                                   <h2 class="table-avatar">
-                                    <a href="{% url 'doctor-profile' pk=prescription.doctor.doctor_id %}" class="avatar avatar-sm mr-2">
+                                    <a href="{% url 'doctor-profile' pk=prescription.doctor.doctor_id %}"
+                                      class="avatar avatar-sm mr-2">
                                       <img class="avatar-img rounded-circle"
                                         src="{{prescription.doctor.featured_image.url }}" alt="User Image" />
                                     </a>
-                                    <a href="{% url 'doctor-profile' pk=prescription.doctor.doctor_id %}" style="text-align: left;">Dr.
+                                    <a href="{% url 'doctor-profile' pk=prescription.doctor.doctor_id %}"
+                                      style="text-align: left;">Dr.
                                       {{prescription.doctor.name}}<span>{{prescription.doctor.department_name}}</span></a>
                                   </h2>
                                 </td>
@@ -280,7 +284,8 @@
                                       <img class="avatar-img rounded-circle" src="{{report.doctor.featured_image.url }}"
                                         alt="User Image" />
                                     </a>
-                                    <a href="doctor-profile.html">Dr. {{report.doctor.name}}<span>{{report.doctor.department_name}}</span></a>
+                                    <a href="doctor-profile.html">Dr.
+                                      {{report.doctor.name}}<span>{{report.doctor.department_name}}</span></a>
                                   </h2>
                                 </td>
                                 <td class="text-right">

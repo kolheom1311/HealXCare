@@ -55,14 +55,12 @@ urlpatterns = [
     path('pharmacist-list/', views.view_pharmacist,name='pharmacist-list'),
     path('edit-pharmacist/<int:pk>/', views.edit_pharmacist,name='edit-pharmacist'),
     path('mypatient-list/', views.mypatient_list,name='mypatient-list'),
-    path('prescription-list/<int:pk>', views.prescription_list,name='prescription-list'),
+    path('prescription-list/<str:pk>', views.prescription_list,name='prescription-list'),
     path('add-test/', views.add_test,name='add-test'),
     path('test-list/', views.test_list,name='test-list'),
     path('delete-test/<int:pk>/', views.delete_test,name='delete-test'),
     path('pharmacist-dashboard/', views.pharmacist_dashboard,name='pharmacist-dashboard'),
-    path('report-history/', views.report_history,name='report-history'),
-    
-    
+    path('report-history/', views.report_history,name='report-history'),    
 ]
   
 

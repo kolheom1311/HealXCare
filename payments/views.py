@@ -3,11 +3,14 @@ import razorpay
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Payment
+from django.template.loader import get_template
 from doctor.models import Appointment
 from django.utils.timezone import now
+import pdfkit
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -89,3 +92,33 @@ def payment_success(request, appointment_id):
 @login_required(login_url="login")
 def payment_failure(request):
     return render(request, "payment/payment_failure.html")
+
+@csrf_exempt
+@login_required(login_url="login")
+# View to display the invoice
+def billing_invoice_view(request, payment_id):
+    payment = get_object_or_404(Payment, payment_id=payment_id)
+    template = 'billing_invoice.html'
+    context = {'payment': payment}
+    return render(request, template, context)
+
+
+@csrf_exempt
+@login_required(login_url="login")
+# View to download the invoice as a PDF
+def download_invoice_view(request, payment_id):
+    payment = get_object_or_404(Payment, payment_id=payment_id)
+    template = get_template('billing_invoice.html')
+    html = template.render({'payment': payment})
+
+    # Generate PDF
+    pdf_options = {
+        'page-size': 'A4',
+        'encoding': 'UTF-8',
+        'no-outline': None,
+    }
+    pdf = pdfkit.from_string(html, False, options=pdf_options)
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{payment_id}.pdf"'
+    return response
