@@ -302,7 +302,6 @@ def login_user(request):
     elif request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -418,8 +417,7 @@ def normalize_phone_number(phone_number):
     return re.sub(r'\D', '', phone_number)  # Keep only digits
 
 @csrf_exempt
-@login_required(login_url="login")
-@cache_control(must_revalidate=True)
+# @cache_control(must_revalidate=True)
 def send_otp_view(request):
     if request.method == "POST":
         phone_number = request.POST.get("phone_number").replace(" ", "")  # Remove spaces
@@ -437,6 +435,34 @@ def send_otp_view(request):
         return JsonResponse({"message": "OTP sent successfully."})
     
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+# @csrf_exempt
+# @login_required(login_url="login")
+# @cache_control(must_revalidate=True)
+# def send_otp_view(request):
+#     if request.method == "POST":
+#         phone_number = request.POST.get("phone_number", "").replace(" ", "")
+
+#         if not phone_number:
+#             return JsonResponse({"error": "Phone number is required."}, status=400)
+
+#         # Generate a random 6-digit OTP
+#         otp = random.randint(100000, 999999)
+
+#         # Store OTP in cache (valid for 5 minutes)
+#         cache_key = f"otp_{phone_number}"
+#         cache.set(cache_key, otp, timeout=300)
+
+#         print(f"OTP for {phone_number}: {otp}")  # ✅ Debugging
+
+#         # Send the OTP to the provided phone number
+#         message_sid = send_otp(phone_number, otp)
+#         if message_sid:
+#             return JsonResponse({"message": "OTP sent successfully."})
+#         else:
+#             return JsonResponse({"error": "Failed to send OTP. Please try again."}, status=500)
+
+#     return JsonResponse({"error": "Invalid request method"}, status=400)
 
 @csrf_exempt
 @login_required(login_url="login")

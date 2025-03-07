@@ -37,7 +37,7 @@ from xhtml2pdf import pisa
 from .models import Report
 from django.views.decorators.csrf import csrf_exempt'''
 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .forms import DoctorUserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -682,10 +682,11 @@ def patient_profile(request, pk):
         patient = Patient.objects.get(patient_id=pk)
         appointments = Appointment.objects.filter(doctor=doctor).filter(patient=patient)
         prescription = Prescription.objects.filter(doctor=doctor).filter(patient=patient)
+        oldprescription = Prescription.objects.filter(patient=patient)
         report = Report.objects.filter(doctor=doctor).filter(patient=patient) 
     else:
         redirect('doctor-logout')
-    context = {'doctor': doctor, 'appointments': appointments, 'patient': patient, 'prescription': prescription, 'report': report}  
+    context = {'doctor': doctor, 'appointments': appointments, 'patient': patient, 'prescription': prescription, 'oldprescription': oldprescription, 'report': report}  
     return render(request, 'patient-profile.html', context)
 
 
