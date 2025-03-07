@@ -117,7 +117,7 @@ class Patient(models.Model):
 
     # History and Attachments
     history = models.TextField(null=True, blank=True)
-    uploaded_files = models.JSONField(default=list, blank=True)
+    uploaded_files = models.JSONField(default=list, blank=True, null=True)
 
     def __str__(self):
         return str(self.user.username)

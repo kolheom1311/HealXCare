@@ -795,7 +795,7 @@ def report_pdf(request, pk):
 def patient_search(request, pk):
     if request.user.is_authenticated and request.user.is_doctor:
         doctor = Doctor_Information.objects.get(doctor_id=pk)
-        id = int(request.GET['search_query'])
+        id = request.GET['search_query']
         patient = Patient.objects.get(patient_id=id)
         prescription = Prescription.objects.filter(doctor=doctor).filter(patient=patient)
         context = {'patient': patient, 'doctor': doctor, 'prescription': prescription}
