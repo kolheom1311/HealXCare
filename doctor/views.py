@@ -566,7 +566,7 @@ def doctor_profile_settings(request):
             doctor.description = description
             doctor.consultation_fee = consultation_fee
             doctor.report_fee = report_fee
-            doctor.nid = regid
+            doctor.regid = regid
             doctor.visiting_hour = visit_hour
             doctor.location = location
             doctor.featured_image = featured_image

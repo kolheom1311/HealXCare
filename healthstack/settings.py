@@ -204,6 +204,10 @@ TWILIO_ACCOUNT_SID = env('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = env('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = env('TWILIO_PHONE_NUMBER')
 
+# Gemini Credentials
+GEMINI_API_KEY = env('GEMINI_API_KEY')
+GEMINI_API_URL = env('GEMINI_API_URL')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 

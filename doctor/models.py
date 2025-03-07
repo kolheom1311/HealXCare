@@ -46,6 +46,7 @@ class Doctor_Information(models.Model):
     email = models.EmailField(max_length=200, null=True, blank=True)
     phone_number = models.CharField(max_length=200, null=True, blank=True)
     regid = models.CharField(max_length=200, null=True, blank=True)  # registration id
+    regid_verified = models.BooleanField(default=False)
     visiting_hour = models.CharField(max_length=200, null=True, blank=True)
     consultation_fee = models.IntegerField(null=True, blank=True)
     report_fee = models.IntegerField(null=True, blank=True)

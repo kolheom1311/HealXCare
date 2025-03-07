@@ -19,6 +19,7 @@ from django.dispatch import receiver
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.cache import cache
+from django.core.files.storage import FileSystemStorage
 from .utils import searchDoctors, searchHospitals, searchDepartmentDoctors, paginateHospitals
 from .models import Patient, User
 from doctor.models import *
@@ -34,11 +35,16 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
 from healthstack.twilio_service import send_otp
+from google import genai
+from PIL import Image
 # import razorpay
 # from razorpay import Payment
 import os
 from payments.models import Payment
 
+GEMINI_API_KEY = settings.GEMINI_API_KEY.strip()
+GEMINI_API_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-pro:generateText?key=${GEMINI_API_KEY}"
+print(GEMINI_API_ENDPOINT)
 def send_test_email(request):
     """View to send a welcome email using ZeptoMail"""
     response = send_zeptomail(
@@ -199,8 +205,7 @@ def resetPassword(request):
 
     context = {'form': form}
     return render(request, 'reset_password.html', context)
-   
-    
+       
 def privacy_policy(request):
     return render(request, 'privacy-policy.html')
 
@@ -241,7 +246,6 @@ def doctor_profile(request, pk):
             
     context = {'doctor': doctor, 'patient': patient, 'educations': educations, 'experiences': experiences, 'doctor_review': doctor_review}
     return render(request, 'doctor-profile.html', context)
-
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -410,8 +414,6 @@ def activate_account(request, uidb64, token):
     messages.error(request, 'Activation link is invalid or expired.')
     return redirect('patient-register')
 
-
-# Function to normalize phone number (remove spaces and special characters)
 def normalize_phone_number(phone_number):
     return re.sub(r'\D', '', phone_number)  # Keep only digits
 
@@ -494,49 +496,313 @@ def patient_dashboard(request):
 
 @csrf_exempt
 @login_required(login_url="login")
+# def profile_settings(request):
+#     if request.user.is_patient:
+#         patient = Patient.objects.get(user=request.user)
+#         old_featured_image = patient.featured_image
+
+#         if request.method == 'GET':
+#             context = {'patient': patient}
+#             return render(request, 'profile-settings.html', context)
+
+#         elif request.method == 'POST':
+#             featured_image = request.FILES.get('featured_image', old_featured_image)
+#             name = request.POST.get('name')
+#             dob = request.POST.get('dob')
+#             blood_group = request.POST.get('blood_group')
+#             phone_number = request.POST.get('phone_number')
+#             address = request.POST.get('address')
+
+#             # Validate required fields
+#             required_fields = [name, dob, phone_number, address]
+#             if all(required_fields):
+#                 patient.name = name
+#                 patient.phone_number = phone_number
+#                 patient.address = address
+#                 patient.blood_group = blood_group
+#                 patient.dob = dob
+#                 patient.featured_image = featured_image
+                
+#                 # Auto-calculate age from dob
+#                 try:
+#                     dob_date = datetime.strptime(dob, '%Y-%m-%d')
+#                     today = datetime.today()
+#                     patient.age = today.year - dob_date.year - ((today.month, today.day) < (dob_date.month, dob_date.day))
+#                 except ValueError:
+#                     messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD.')
+#                     return redirect('profile-settings')
+
+#                 patient.profile_completed = True
+#                 patient.save()
+#                 messages.success(request, 'Profile updated successfully!')
+#             else:
+#                 messages.error(request, 'Please fill in all required fields.')
+#                 return redirect('profile-settings')
+
+#             return redirect('patient-dashboard')
+#     else:
+#         return redirect('logout')
+# def profile_settings(request):
+    # if request.user.is_patient:
+    #     patient = Patient.objects.get(user=request.user)
+    #     old_featured_image = patient.featured_image
+
+    #     if request.method == 'GET':
+    #         # Split the uploaded files into a list
+    #         uploaded_files = patient.uploaded_files.split(',') if patient.uploaded_files else []
+    #         context = {
+    #             'patient': patient,
+    #             'uploaded_files': uploaded_files,
+    #         }
+    #         return render(request, 'profile-settings.html', context)
+
+    #     elif request.method == 'POST':
+    #         featured_image = request.FILES.get('featured_image', old_featured_image)
+    #         name = request.POST.get('name')
+    #         dob = request.POST.get('dob')
+    #         blood_group = request.POST.get('blood_group')
+    #         phone_number = request.POST.get('phone_number')
+    #         address = request.POST.get('address')
+    #         history = request.POST.get('history')
+
+    #         # File attachments
+    #         attachments = request.FILES.getlist('attachments')
+    #         attachment_urls = []
+
+    #         for attachment in attachments:
+    #             fs = FileSystemStorage()
+    #             filename = fs.save(f'patient_attachments/{attachment.name}', attachment)
+    #             attachment_urls.append(fs.url(filename))
+            
+    #         # Combine new and old file URLs if needed
+    #         if patient.uploaded_files:
+    #             attachment_urls.extend(patient.uploaded_files.split(','))
+
+    #         # Validate required fields
+    #         required_fields = [name, dob, phone_number, address]
+    #         if all(required_fields):
+    #             patient.name = name
+    #             patient.phone_number = phone_number
+    #             patient.address = address
+    #             patient.blood_group = blood_group
+    #             patient.dob = dob
+    #             patient.featured_image = featured_image
+    #             patient.history = history
+    #             patient.uploaded_files = ','.join(attachment_urls)
+
+    #             # Auto-calculate age from dob
+    #             try:
+    #                 dob_date = datetime.strptime(dob, '%Y-%m-%d')
+    #                 today = datetime.today()
+    #                 patient.age = today.year - dob_date.year - ((today.month, today.day) < (dob_date.month, dob_date.day))
+    #             except ValueError:
+    #                 messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD.')
+    #                 return redirect('profile-settings')
+
+    #             patient.profile_completed = True
+    #             patient.save()
+    #             messages.success(request, 'Profile updated successfully!')
+    #         else:
+    #             messages.error(request, 'Please fill in all required fields.')
+    #             return redirect('profile-settings')
+
+    #         return redirect('patient-dashboard')
+    # else:
+    #     return redirect('logout')
+# def profile_settings(request):
+#     if request.user.is_patient:
+#         patient = Patient.objects.get(user=request.user)
+#         old_featured_image = patient.featured_image
+
+#         if request.method == 'GET':
+#             # Split the uploaded files into a list
+#             uploaded_files = patient.uploaded_files.split(',') if patient.uploaded_files else []
+#             context = {
+#                 'patient': patient,
+#                 'uploaded_files': uploaded_files,
+#             }
+#             return render(request, 'profile-settings.html', context)
+
+#         elif request.method == 'POST':
+#             featured_image = request.FILES.get('featured_image', old_featured_image)
+#             name = request.POST.get('name')
+#             dob = request.POST.get('dob')
+#             blood_group = request.POST.get('blood_group')
+#             phone_number = request.POST.get('phone_number')
+#             address = request.POST.get('address')
+#             history = request.POST.get('history')
+
+#             # Handle new file attachments
+#             attachments = request.FILES.getlist('attachments')
+#             attachment_urls = []
+
+#             for attachment in attachments:
+#                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'images/patient_attachments'))
+#                 filename = fs.save(attachment.name, attachment)
+#                 file_url = fs.url(f'images/patient_attachments/{filename}')
+#                 attachment_urls.append(file_url)
+
+#             # Combine new and old file URLs if needed
+#             existing_files = patient.uploaded_files.split(',') if patient.uploaded_files else []
+#             attachment_urls.extend(existing_files)
+
+#             # Handle file deletions
+#             delete_files = request.POST.getlist('delete_files')
+#             if delete_files:
+#                 for file_path in delete_files:
+#                     if file_path in attachment_urls:
+#                         # Remove the file from the server
+#                         full_path = os.path.join(settings.MEDIA_ROOT, file_path.lstrip('/'))
+#                         if os.path.exists(full_path):
+#                             os.remove(full_path)
+                        
+#                         # Remove from the list to be saved in the database
+#                         attachment_urls.remove(file_path)
+
+#             # Validate required fields
+#             required_fields = [name, dob, phone_number, address]
+#             if all(required_fields):
+#                 patient.name = name
+#                 patient.phone_number = phone_number
+#                 patient.address = address
+#                 patient.blood_group = blood_group
+#                 patient.dob = dob
+#                 patient.featured_image = featured_image
+#                 patient.history = history
+#                 patient.uploaded_files = ','.join(attachment_urls)
+
+#                 # Auto-calculate age from dob
+#                 try:
+#                     dob_date = datetime.strptime(dob, '%Y-%m-%d')
+#                     today = datetime.today()
+#                     patient.age = today.year - dob_date.year - ((today.month, today.day) < (dob_date.month, dob_date.day))
+#                 except ValueError:
+#                     messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD.')
+#                     return redirect('profile-settings')
+
+#                 patient.profile_completed = True
+#                 patient.save()
+#                 messages.success(request, 'Profile updated successfully!')
+#             else:
+#                 messages.error(request, 'Please fill in all required fields.')
+#                 return redirect('profile-settings')
+
+#             return redirect('patient-dashboard')
+#     else:
+#         return redirect('logout')
+
 def profile_settings(request):
     if request.user.is_patient:
         patient = Patient.objects.get(user=request.user)
         old_featured_image = patient.featured_image
+        old_history = patient.history
 
         if request.method == 'GET':
-            context = {'patient': patient}
+            uploaded_files = patient.uploaded_files.split(',') if patient.uploaded_files else []
+            context = {
+                'patient': patient,
+                'uploaded_files': uploaded_files,
+            }
             return render(request, 'profile-settings.html', context)
-        
+
         elif request.method == 'POST':
             featured_image = request.FILES.get('featured_image', old_featured_image)
             name = request.POST.get('name')
             dob = request.POST.get('dob')
-            age = request.POST.get('age')
             blood_group = request.POST.get('blood_group')
+            gender = request.POST.get('gender')
             phone_number = request.POST.get('phone_number')
             address = request.POST.get('address')
-            nid = request.POST.get('nid')
             history = request.POST.get('history')
 
-            # Validate required fields
-            required_fields = [name, dob, age, phone_number, address]
+            # Handle new file attachments
+            attachments = request.FILES.getlist('attachments')
+            attachment_urls = []
+            file_paths = []
+
+            for attachment in attachments:
+                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'images/patient_attachments'))
+                filename = fs.save(attachment.name, attachment)
+                file_url = fs.url(f'images/patient_attachments/{filename}')
+                attachment_urls.append(file_url)
+
+                # Get the file path for processing
+                file_paths.append(fs.path(filename))
+
+            existing_files = patient.uploaded_files.split(',') if patient.uploaded_files else []
+            attachment_urls.extend(existing_files)
+
+            delete_files = request.POST.getlist('delete_files')
+            if delete_files:
+                for file_path in delete_files:
+                    if file_path in attachment_urls:
+                        full_path = os.path.join(settings.MEDIA_ROOT, file_path.lstrip('/'))
+                        if os.path.exists(full_path):
+                            os.remove(full_path)
+                        attachment_urls.remove(file_path)
+
+            # Rewrite history only if it has changed
+            rewritten_history = history
+            if history != old_history:
+                rewritten_history = rewrite_history(history, file_paths if file_paths else None)
+
+            required_fields = [name, dob, phone_number, address]
             if all(required_fields):
                 patient.name = name
-                patient.age = age
                 patient.phone_number = phone_number
                 patient.address = address
+                patient.gender = gender
                 patient.blood_group = blood_group
-                patient.history = history
                 patient.dob = dob
-                patient.nid = nid
                 patient.featured_image = featured_image
+                patient.history = rewritten_history
+                patient.uploaded_files = ','.join(attachment_urls)
+
+                try:
+                    dob_date = datetime.strptime(dob, '%Y-%m-%d')
+                    today = datetime.today()
+                    patient.age = today.year - dob_date.year - ((today.month, today.day) < (dob_date.month, dob_date.day))
+                except ValueError:
+                    messages.error(request, 'Invalid date of birth format. Please use YYYY-MM-DD.')
+                    return redirect('profile-settings')
+
                 patient.profile_completed = True
                 patient.save()
                 messages.success(request, 'Profile updated successfully!')
             else:
                 messages.error(request, 'Please fill in all required fields.')
                 return redirect('profile-settings')
-            
+
             return redirect('patient-dashboard')
     else:
         return redirect('logout')
+
+def rewrite_history(history, file_paths=None):
+    client = genai.Client(api_key="AIzaSyBc1w_B8gO7_lF3Y2U7Hwyyz_OnceTr_1c")
+
+    contents = [{'text': f'Rewrite {history}, such that it should be written in a more professional manner. '
+                          f'Example: I have high sugar. Your rewrite should be: The patient is diagnosed with high sugar levels. '
+                          f'Do not respond as if you are chatting, only respond with the rewritten text.'
+                          f'Always use The Patient (Third Person Perspective to refer), instead of I'}]
     
+    if file_paths:
+        for file_path in file_paths:
+            # Ensure the image is properly loaded as a file
+            contents.append({'file': open(file_path, 'rb')})
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=contents
+        )
+        return response.text if response else history
+    
+    except Exception as e:
+        print(f"Error in rewrite_history: {e}")
+        return history
+
+
+
 @csrf_exempt
 @login_required(login_url="login")
 def search(request):
@@ -753,7 +1019,6 @@ def view_report(request,pk):
         return render(request, 'view-report.html',context)
     else:
         redirect('logout') 
-
 
 def test_cart(request):
     return render(request, 'test-cart.html')

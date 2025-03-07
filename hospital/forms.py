@@ -21,12 +21,11 @@ class CustomUserCreationForm(UserCreationForm):
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control floating'})
 
-
 class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient
         fields = ['name', 'age', 'phone_number', 'blood_group',
-                  'featured_image', 'history', 'nid', 'dob', 'address']
+                  'featured_image', 'dob', 'address']
 
         # widgets = {
         #     'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -44,7 +43,6 @@ class PatientForm(forms.ModelForm):
 
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
-
 
 class PasswordResetForm(ModelForm):
     class Meta:

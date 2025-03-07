@@ -31,13 +31,27 @@ def generate_random_string():
     string_var = "#PT" + string_var
     return string_var
 
+def generate_next_patient_id():
+    # Fetch the last patient based on 'patient_id'
+    last_patient = Patient.objects.exclude(patient_id__isnull=True).order_by('patient_id').last()
+    
+    if last_patient and isinstance(last_patient.patient_id, str) and last_patient.patient_id.startswith('HXC_'):
+        # Extract the last ID and increment it
+        last_id = int(last_patient.patient_id.split('_')[1])
+        new_id = f"HXC_{str(last_id + 1).zfill(3)}"
+    else:
+        # Default ID for the first patient
+        new_id = "HXC_001"
+    
+    return new_id
+
 @receiver(post_save, sender=User)
 def createPatient(sender, instance, created, **kwargs):
     if created:
         if instance.is_patient:
             user = instance
             Patient.objects.create(
-                user=user, username=user.username, email=user.email, serial_number = generate_random_string())
+                user=user, username=user.username, email=user.email, patient_id=generate_next_patient_id())
         elif instance.is_doctor:
             user = instance
             Doctor_Information.objects.create(

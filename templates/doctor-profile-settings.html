@@ -5,7 +5,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>HealthStack</title>
+	<title>HealXCare</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
 
 	<!-- Favicons -->
@@ -178,14 +178,34 @@
 													value="{{doctor.dob}}">
 											</div>
 										</div>
-										<div class="col-md-6">
+										<!-- <div class="col-md-6">
 											<div class="form-group">
 												<label>Registration No. <span class="text-danger"
 														style="user-select: none">*</span></label>
 												<input type="text" name="regid" class="form-control"
 													value="{{doctor.regid}}" placeholder="Registration No." required>
 											</div>
-										</div>
+										</div> -->
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>
+													Registration No. <span class="text-danger" style="user-select: none">*</span>
+													{% if doctor.regid_verified %}
+														<span class="badge badge-pill bg-success-light">Verified</span>
+													{% else %}
+														<span class="badge badge-pill bg-danger-light">Not Verified</span>
+													{% endif %}
+												</label>
+												<input 
+													type="text" 
+													name="regid" 
+													class="form-control" 
+													value="{{ doctor.regid }}" 
+													placeholder="Registration No." 
+													{% if doctor.regid %} readonly{% endif %} 
+													required>
+											</div>
+										</div>																									
 										<div class="col-md-6">
 											<div class="form-group">
 												<label>Visiting Hour <span class="text-danger"
