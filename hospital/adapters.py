@@ -5,7 +5,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount, SocialToken
 from django.shortcuts import redirect
 from django.contrib import messages
-from healthstack.emails import send_zeptomail_using_template
+from healxcare.emails import send_zeptomail_using_template
 from hospital.models import User, Patient
 from doctor.models import Doctor_Information  
 import logging

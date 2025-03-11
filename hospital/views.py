@@ -30,11 +30,11 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from healthstack.emails import *  # Import the ZeptoMail function
+from healxcare.emails import *  # Import the ZeptoMail function
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
-from healthstack.twilio_service import send_otp
+from healxcare.twilio_service import send_otp
 from google import genai
 from PIL import Image
 # import razorpay
