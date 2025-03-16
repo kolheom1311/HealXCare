@@ -71,8 +71,14 @@ Open your browser and go to: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 ## Contributions 🤝
 We welcome contributions from the community! Feel free to submit issues, fork the repo, and make pull requests.
 
-## License 📜
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🛡 License  
+
+![License](https://img.shields.io/badge/License-Proprietary-red)  
+
+This project is licensed under the **HealXCare Proprietary License**.  
+Unauthorized use, modification, or distribution is strictly prohibited.  
+
+📜 See the full [LICENSE](LICENSE) for details.
 
 ---
 💙 **Made with passion for healthcare innovation!** 🏥✨
