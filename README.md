@@ -47,7 +47,7 @@ python manage.py migrate
 
 ### 5. Run the Development Server 🚀
 ```bash
-python manage.py runserver
+python manage.py runserver 8000
 ```
 
 ### 6. Access the Application 🌐
