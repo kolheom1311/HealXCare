@@ -44,7 +44,6 @@ from payments.models import Payment
 
 GEMINI_API_KEY = settings.GEMINI_API_KEY.strip()
 GEMINI_API_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-pro:generateText?key=${GEMINI_API_KEY}"
-print(GEMINI_API_ENDPOINT)
 def send_test_email(request):
     """View to send a welcome email using ZeptoMail"""
     response = send_zeptomail(

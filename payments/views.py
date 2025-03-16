@@ -1,5 +1,7 @@
+from io import BytesIO
 from django.db import IntegrityError
 import razorpay
+from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.http import JsonResponse
@@ -7,6 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import Payment
+from hospital.models import Patient
 from django.template.loader import get_template
 from doctor.models import Appointment
 from django.utils.timezone import now
@@ -20,27 +23,48 @@ def create_payment(request, appointment_id):
     # Get the appointment object
     appointment = get_object_or_404(Appointment, id=appointment_id)
     amount = appointment.doctor.consultation_fee * 100  # Convert INR to paise
-    # Create Razorpay order
-    order = client.order.create({
-        "amount": amount, 
-        "currency": "INR", 
-        "payment_capture": 1  
-    })
 
-    # Save the order ID in the database
-    Payment.objects.create(
-        appointment=appointment,
-        order_id=order['id'],
-        amount=amount / 100,  # Store in INR
-        status="pending"  # Default status
-    )
+    # Check if a payment already exists for this appointment
+    existing_payment = Payment.objects.filter(appointment=appointment).first()
+
+    if existing_payment:
+        if existing_payment.status == "pending":
+            # If order exists but is pending, continue with the same order
+            razorpay_order_id = existing_payment.order_id
+        else:
+            # If the previous payment was completed, create a new order
+            order = client.order.create({
+                "amount": amount, 
+                "currency": "INR", 
+                "payment_capture": 1  
+            })
+            existing_payment.order_id = order['id']
+            existing_payment.amount = amount / 100
+            existing_payment.status = "pending"  # Reset status
+            existing_payment.save()
+            razorpay_order_id = order['id']
+    else:
+        # No existing payment, create a new one
+        order = client.order.create({
+            "amount": amount, 
+            "currency": "INR", 
+            "payment_capture": 1  
+        })
+        Payment.objects.create(
+            appointment=appointment,
+            order_id=order['id'],
+            amount=amount / 100,
+            status="pending"
+        )
+        razorpay_order_id = order['id']
 
     return render(request, 'payment/razorpay_checkout.html', {
         'appointment': appointment,
-        'razorpay_order_id': order['id'],
+        'razorpay_order_id': razorpay_order_id,
         'amount': amount / 100,
         'payment_type': "Online"
     })
+
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -98,27 +122,57 @@ def payment_failure(request):
 # View to display the invoice
 def billing_invoice_view(request, payment_id):
     payment = get_object_or_404(Payment, payment_id=payment_id)
-    template = 'billing_invoice.html'
-    context = {'payment': payment}
+    patient = Patient.objects.get(user=request.user)
+    template = 'view-invoice.html'
+    context = {'patient':patient, 'payment': payment, }
     return render(request, template, context)
 
 
-@csrf_exempt
+# Utility function to render HTML to PDF
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type="application/pdf")
+    return None
+
+# View to generate and download invoice PDF
 @login_required(login_url="login")
-# View to download the invoice as a PDF
-def download_invoice_view(request, payment_id):
+@csrf_exempt
+def download_invoice_pdf(request, payment_id):
     payment = get_object_or_404(Payment, payment_id=payment_id)
-    template = get_template('billing_invoice.html')
-    html = template.render({'payment': payment})
-
-    # Generate PDF
-    pdf_options = {
-        'page-size': 'A4',
-        'encoding': 'UTF-8',
-        'no-outline': None,
+    
+    context = {
+        'payment': payment
     }
-    pdf = pdfkit.from_string(html, False, options=pdf_options)
+    
+    pdf = render_to_pdf('billing_invoice.html', context)
+    
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="invoice_{payment_id}.pdf"'
+        return response
+    
+    return HttpResponse("Error generating PDF", status=500)
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="invoice_{payment_id}.pdf"'
-    return response
+# @csrf_exempt
+# @login_required(login_url="login")
+# # View to download the invoice as a PDF
+# def download_invoice_view(request, payment_id):
+#     payment = get_object_or_404(Payment, payment_id=payment_id)
+#     template = get_template('billing_invoice.html')
+#     html = template.render({'payment': payment})
+
+#     # Generate PDF
+#     pdf_options = {
+#         'page-size': 'A4',
+#         'encoding': 'UTF-8',
+#         'no-outline': None,
+#     }
+#     pdf = pdfkit.from_string(html, False, options=pdf_options)
+
+#     response = HttpResponse(pdf, content_type='application/pdf')
+#     response['Content-Disposition'] = f'attachment; filename="invoice_{payment_id}.pdf"'
+#     return response

@@ -251,7 +251,7 @@
                       <div class="col-md-6">
                         <label class="form-label">Blood Group</label>
                         <select class="form-select" name="blood_group">
-                          <option value="{{ patient.blood_group }}">{{ patient.blood_group }}</option>
+                          <option value="{{patient.blood_group}}">{{patient.blood_group}}</option>
                           <option value="A-">A-</option>
                           <option value="A+">A+</option>
                           <option value="B-">B-</option>
@@ -264,36 +264,33 @@
                       </div>
                       <div class="col-md-6">
                         <label class="form-label">
-                            Mobile
-                            {% if patient.pno_verified %}
-                                <span class="badge bg-success">Verified</span>
-                            {% else %}
-                                <span class="badge bg-danger">Not Verified</span>
-                            {% endif %}
+                          Mobile
+                          {% if patient.pno_verified %}
+                          <span class="badge bg-success">Verified</span>
+                          {% else %}
+                          <span class="badge bg-danger">Not Verified</span>
+                          {% endif %}
                         </label>
+                        {% if patient.pno_verified %}
                         <div class="input-group">
-                            <input 
-                                type="text" 
-                                id="phone_number" 
-                                value="{{ patient.phone_number }}" 
-                                class="form-control" 
-                                name="phone_number" 
-                                required
-                            >
-                            <a 
-                                class="btn btn-outline-primary" 
-                                id="verify-btn"
-                                {% if patient.pno_verified %} 
-                                    disabled 
-                                    style="color: black; background-color: grey;"
-                                {% else %}
-                                    href="{% url 'send_otp' %}?phone_number={{ patient.phone_number }}"
-                                {% endif %}
-                            >
-                                Verify
-                            </a>
+                          <input type="text" id="phone_number" value="{{ patient.phone_number }}" class="form-control"
+                            name="phone_number" required readonly style="background-color: white;">
+                          <a class="btn btn-outline-primary" id="verify-btn"
+                            style="color: grey; background-color: darkgrey; border-color: darkgrey;" disabled>
+                            Verify
+                          </a>
                         </div>
-                    </div>
+                        {% else %}
+                        <div class="input-group">
+                          <input type="text" id="phone_number" value="{{ patient.phone_number }}" class="form-control"
+                            name="phone_number" required>
+                          <a class="btn btn-outline-primary" id="verify-btn" style="color: black; border-color: darkgrey;"
+                            href="{% url 'send_otp' %}?phone_number={{ patient.phone_number }}">
+                            Verify
+                          </a>
+                        </div>
+                        {% endif %}
+                      </div>
 
 
                       <div class="col-md-6">
@@ -372,19 +369,19 @@
   <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
 
   <script>
-    document.getElementById('phone_number').addEventListener('input', function() {
-        const phoneNumber = this.value.trim();
-        const verifyBtn = document.getElementById('verify-btn');
-        
-        if (phoneNumber) {
-            verifyBtn.href = `/send-otp/?phone_number=${encodeURIComponent(phoneNumber)}`;
-            verifyBtn.removeAttribute('disabled');
-        } else {
-            verifyBtn.href = '#';
-            verifyBtn.setAttribute('disabled', 'true');
-        }
+    document.getElementById('phone_number').addEventListener('input', function () {
+      const phoneNumber = this.value.trim();
+      const verifyBtn = document.getElementById('verify-btn');
+
+      if (phoneNumber) {
+        verifyBtn.href = `/send-otp/?phone_number=${encodeURIComponent(phoneNumber)}`;
+        verifyBtn.removeAttribute('disabled');
+      } else {
+        verifyBtn.href = '#';
+        verifyBtn.setAttribute('disabled', 'true');
+      }
     });
-</script>
+  </script>
 
   <!-- Bootstrap Core JS -->
   <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>

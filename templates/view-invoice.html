@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Invoice - HealXCare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+
+    <!-- Favicons -->
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
+</head>
+<body>
+    <div class="main-wrapper">
+        <!-- Header -->
+        <header class="header">
+            {% include 'patient_navbar.html' %}
+        </header>
+        <!-- /Header -->
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-12">
+                        <nav aria-label="breadcrumb" class="page-breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'patient-dashboard' %}">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">View Invoice</li>
+                            </ol>
+                        </nav>
+                        <h2 class="breadcrumb-title">Invoice</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-md-4 col-lg-3">
+                        {% include 'patient-sidebar.html' %}
+                    </div>
+                    <!-- /Sidebar -->
+
+                    <div class="col-md-8 col-lg-9">
+                        <div class="card shadow-lg p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <img src="{% static 'HealthStack-System/images/Normal/healxcare.jpg' %}" alt="HealXCare Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h4 class="text-uppercase">Invoice</h4>
+                                    <p><strong>Invoice ID:</strong> {{ payment.payment_id }}</p>
+                                    <p><strong>Date:</strong> {{ payment.created_at }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Patient Details</h5>
+                                    <p><strong>Name:</strong> {{ payment.appointment.patient.name }}</p>
+                                    <p><strong>Email:</strong> {{ payment.appointment.patient.email }}</p>
+                                    <p><strong>Phone:</strong> {{ payment.appointment.patient.phone_number }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Doctor Details</h5>
+                                    <p><strong>Name:</strong> {{ payment.appointment.doctor.name }}</p>
+                                    <p><strong>Department:</strong> {{ payment.appointment.doctor.department_name }}</p>
+                                    <p><strong>Email:</strong> {{ payment.appointment.doctor.email }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <table class="table table-bordered">
+                                <thead class="bg-primary-light text-white">
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th class="text-center">Amount (INR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% if payment.appointment.appointment_type == "checkup" %}
+                                        <td>Consultation Fee</td>
+                                        {% else %}
+                                        <td>Report Fee</td>
+                                        {% endif %}
+                                        <td>{{ payment.appointment.date }}</td>
+                                        <td>{{ payment.appointment.time }}</td>
+                                        <td class="text-center">₹{{ payment.amount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right pr-5 pt-3">
+                                <h4><strong>Total: ₹{{ payment.amount }}</strong></h4>
+                            </div>
+                            <hr>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'payments:download_invoice' payment.payment_id %}" target="_blank" class="btn btn-sm bg-primary-light" style="color: black !important;">
+                                    <i class="fas fa-download"></i> Download Invoice
+                                </a>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        {% include 'footer.html' %}
+        <!-- /Footer -->
+    </div>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+</body>
+</html>

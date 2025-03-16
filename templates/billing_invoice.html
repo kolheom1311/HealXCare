@@ -1,89 +1,145 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
-    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
-    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
-  </head>
-  <body>
-    <div class="main-wrapper">
-      <div class="content">
-        <div class="container-fluid">
-          <div class="row" style="font-size:14px;">
-            <div class="col-md-7 col-lg-8">
-              <div class="invoice-content">
-                <div class="invoice-item">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="invoice-logo">
-                        <img style="width: 220px;" src="{% static 'HealthStack-System/images/Normal/logo.png' %}" alt="logo">
-                      </div>
-                    </div>
-                    <div class="col-md-6 text-right">
-                      <p class="invoice-details">
-                        <strong>Payment ID:</strong> {{payment.payment_id}} <br>
-                        <strong>Patient ID:</strong> {{payment.patient.patient_id}} <br>
-                        <strong>Date:</strong> {{payment.payment_date}}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="invoice-item">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h1><strong class="customer-text">Billed To:</strong></h1>
-                      <p class="invoice-details">
-                        <b>Name:</b> {{payment.patient.name}}<br>
-                        <b>Email:</b> {{payment.patient.email}}<br>
-                        <b>Phone:</b> {{payment.patient.phone_number}}<br>
-                      </p>
-                    </div>
-                    <div class="col-md-6 text-right">
-                      <h1><strong class="customer-text">Issued By:</strong></h1>
-                      <p class="invoice-details">
-                        <b>Hospital Name:</b> {{payment.hospital_name}}<br>
-                        <b>Address:</b> {{payment.hospital_address}}<br>
-                        <b>Phone:</b> {{payment.hospital_phone}}<br>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="invoice-item invoice-table-wrap">
-                  <div class="table-responsive">
-                    <table class="invoice-table table table-bordered text-center">
-                      <tr>
-                        <th>Service</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
-                      </tr>
-                      {% for item in payment.items %}
-                      <tr>
-                        <td>{{ item.service_name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.unit_price }}</td>
-                        <td>{{ item.total_price }}</td>
-                      </tr>
-                      {% endfor %}
-                    </table>
-                  </div>
-                </div>
-                <div class="text-right mt-3">
-                  <h4><b>Subtotal:</b> {{payment.subtotal}}</h4>
-                  <h4><b>Tax ({{payment.tax_rate}}%):</b> {{payment.tax}}</h4>
-                  <h3><b>Total Amount:</b> {{payment.total}}</h3>
-                  <h4><b>Payment Status:</b> {{payment.payment_status}}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Invoice - HealXCare</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            background: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007BFF;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .invoice-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-top: 10px;
+        }
+        .invoice-details, .client-details {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .invoice-details td, .client-details td {
+            padding: 5px;
+            vertical-align: top;
+        }
+        .invoice-details td:nth-child(2), .client-details td:nth-child(2) {
+            text-align: right;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+        }
+        .total {
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <!-- Header Section -->
+        <div class="header">
+            <img src="{% static 'HealthStack-System/images/Normal/healxcare.jpg' %}" alt="HealXCare Logo">
+            <div class="invoice-title">INVOICE</div>
         </div>
-      </div>
+
+        <!-- Invoice Details -->
+        <table class="invoice-details">
+            <tr>
+                <td><strong>Invoice ID:</strong> {{ payment.payment_id }}</td>
+                <td><strong>Invoice Date:</strong> {{ payment.created_at|date:"d M, Y" }}</td>
+            </tr>
+        </table>
+
+        <!-- Client & Doctor Details -->
+        <table class="client-details">
+            <tr>
+                <td>
+                    <h4>Bill To:</h4>
+                    <p><strong>{{ payment.appointment.patient.name }}</strong></p>
+                    <p>Email: {{ payment.appointment.patient.email }}</p>
+                    <p>Phone: {{ payment.appointment.patient.phone_number }}</p>
+                </td>
+                <td>
+                    <h4>Doctor Details:</h4>
+                    <p><strong>{{ payment.appointment.doctor.name }}</strong></p>
+                    <p>Department: {{ payment.appointment.doctor.department_name }}</p>
+                    <p>Email: {{ payment.appointment.doctor.email }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Service Details -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th class="text-center">Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% if payment.appointment.appointment_type == "checkup" %}
+                    <td>Consultation Fee</td>
+                    {% else %}
+                    <td>Medical Report Fee</td>
+                    {% endif %}
+                    <td>{{ payment.appointment.date|date:"d M, Y" }}</td>
+                    <td>{{ payment.appointment.time }}</td>
+                    <td class="text-center">₹ {{ payment.amount|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Total Amount -->
+        <p class="total">Total Amount: ₹ {{ payment.amount|floatformat:2 }}</p>
+
+        <!-- Footer Note -->
+        <div class="footer">
+            <p><strong>Thank you for choosing HealXCare.</strong></p>
+            <p>This invoice is auto-generated and does not require a signature.</p>
+        </div>
     </div>
-    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-  </body>
+</body>
 </html>

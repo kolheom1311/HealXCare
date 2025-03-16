@@ -3,7 +3,7 @@ from doctor.models import Appointment  # Ensure this is the correct import
 
 # Create your models here.
 class Payment(models.Model):
-    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name="payment")
     payment_id = models.CharField(max_length=100, unique=True)
     order_id = models.CharField(max_length=100, unique=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
