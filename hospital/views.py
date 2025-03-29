@@ -35,7 +35,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from hospital.adapters import MySocialAccountAdapter, send_zeptomail_using_template
 from django.contrib.sites.shortcuts import get_current_site
 from healxcare.twilio_service import send_otp
-from google import genai
+from google import generativeai
+# import google.generativeai as genai
 from PIL import Image
 # import razorpay
 # from razorpay import Payment
@@ -802,13 +803,39 @@ def profile_settings(request):
     else:
         return redirect('logout')
 
+# def rewrite_history(history, file_paths=None):
+#     client = generativeai.Client(api_key="AIzaSyBc1w_B8gO7_lF3Y2U7Hwyyz_OnceTr_1c")
+
+#     contents = [{'text': f'Rewrite {history}, such that it should be written in a more professional manner. '
+#                           f'Example: I have high sugar. Your rewrite should be: The patient is diagnosed with high sugar levels. '
+#                           f'Do not respond as if you are chatting, only respond with the rewritten text.'
+#                           f'Always use The Patient (Third Person Perspective to refer), instead of I'}]
+    
+#     if file_paths:
+#         for file_path in file_paths:
+#             # Ensure the image is properly loaded as a file
+#             contents.append({'file': open(file_path, 'rb')})
+
+#     try:
+#         response = client.models.generate_content(
+#             model="gemini-2.0-flash",
+#             contents=contents
+#         )
+#         return response.text if response else history
+    
+#     except Exception as e:
+#         print(f"Error in rewrite_history: {e}")
+#         return history
 def rewrite_history(history, file_paths=None):
-    client = genai.Client(api_key="AIzaSyBc1w_B8gO7_lF3Y2U7Hwyyz_OnceTr_1c")
+    generativeai.configure(api_key="AIzaSyBc1w_B8gO7_lF3Y2U7Hwyyz_OnceTr_1c")
+
+    model = generativeai.GenerativeModel("gemini-1.5-flash")
 
     contents = [{'text': f'Rewrite {history}, such that it should be written in a more professional manner. '
                           f'Example: I have high sugar. Your rewrite should be: The patient is diagnosed with high sugar levels. '
                           f'Do not respond as if you are chatting, only respond with the rewritten text.'
-                          f'Always use The Patient (Third Person Perspective to refer), instead of I'}]
+                          f'Always use The Patient (Third Person Perspective to refer), instead of I'
+                          f'If a file is attached, read it and describe patient health related content like reports in the history'}]
     
     if file_paths:
         for file_path in file_paths:
@@ -816,16 +843,12 @@ def rewrite_history(history, file_paths=None):
             contents.append({'file': open(file_path, 'rb')})
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=contents
-        )
+        response = model.generate_content(contents)
         return response.text if response else history
     
     except Exception as e:
         print(f"Error in rewrite_history: {e}")
         return history
-
 
 
 @csrf_exempt

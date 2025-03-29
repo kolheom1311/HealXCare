@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <!-- doccure/login.html  30 Nov 2019 04:12:20 GMT -->
+  <head>
+    <meta charset="utf-8" />
+    <title>HealXCare</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=0"
+    />
+
+    <!-- Favicons -->
+    <link
+      type="image/x-icon"
+      href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
+      rel="icon"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"
+    />
+
+    <!-- Fontawesome CSS -->
+    <link
+      rel="stylesheet"
+      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
+    />
+
+    <!-- Main CSS -->
+    <link
+      rel="stylesheet"
+      href="{% static 'HealthStack-System/css/Normal/style.css' %}"
+    />
+
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			<header class="header">	{% if user.is_authenticated and user.is_patient %}
+                                    {% include 'patient_navbar.html' %}
+                                    {% endif %}
+				</header>
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+                                    {% if user.is_authenticated and user.is_patient %}
+									<li class="breadcrumb-item"><a href="">View Report</a></li>
+                                    {% endif %}
+									<li class="breadcrumb-item active" aria-current="page">Billing Invoice</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Billing Invoice</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+                         <!-- Profile Sidebar -->
+                                <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+                                    <div>{% include 'patient-sidebar.html' %}</div>
+                                </div>
+                            <!-- / Profile Sidebar -->
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="invoice-content">
+								<div class="invoice-item">
+									<div class="row">
+                    
+										<div class="col-md-6">
+											<div class="invoice-logo">
+												<img src="{% static 'HealthStack-System/images/Normal/healxcare.jpg'%}" alt="logo">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<p class="invoice-details">
+												<strong>Invoice ID:</strong> {{ payment.payment_id }}
+                                                <strong>Invoice Date:</strong> {{ payment.created_at|date:"d M, Y" }}
+											</p>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Invoice Item -->
+								<div class="invoice-item">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="invoice-info">
+												<strong class="customer-text">Doctor:</strong>
+                        
+												<p class="invoice-details invoice-details-two">
+
+													<b>Name: </b>Dr. {{ payment.appointment.doctor.name }} <br>
+													<b>Department: </b>{{ payment.appointment.doctor.department_name }}<br>
+													<b>Email: </b>{{ payment.appointment.doctor.email }} <br>
+
+												</p>
+                        
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="invoice-info invoice-info2">
+												<strong class="customer-text">Patient:</strong>
+												<p class="invoice-details">
+													<b>Name: </b>{{ payment.appointment.patient.name }} <br>
+													<b>Address: </b>{{ payment.appointment.patient.address }}<br>
+													<b>Email: </b>{{ payment.appointment.patient.email }} <br>
+													<b>Phone Number: </b>{{ payment.appointment.patient.phone_number }}<br>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Invoice Item -->                 
+								</div>
+								<!-- /Invoice Information -->
+							  
+							</div>
+        
+						</div>
+					</div>
+
+				</div>
+        
+
+			</div>		
+			<!-- /Page Content -->
+
+      
+      <!-- Footer -->
+      {% include 'footer.html' %}
+      <!-- /Footer -->
+      
+    </div>
+    <!-- /Main Wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+
+    <!-- Sticky Sidebar JS -->
+    <script src="{% static 'HealthStack-System/plugins/Normal/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+    <script src="{% static 'HealthStack-System/plugins/Normal/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+
+    <!-- Searchbar JS -->
+    <script src="{% static 'HealthStack-System/js/Normal/sidebar.js' %}"></script>
+  </body>
+
+  <!-- doccure/patient-dashboard.html  30 Nov 2019 04:12:16 GMT -->
+</html>

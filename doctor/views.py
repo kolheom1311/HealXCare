@@ -768,11 +768,10 @@ def report_pdf(request, pk):
     pdf=render_to_pdf('report_pdf.html', context)
     if pdf:
         response=HttpResponse(pdf, content_type='application/pdf')
-        content="inline; filename=report.pdf"
+        content="inline; filename=Report.pdf"
         # response['Content-Disposition']= content
         return response
     return HttpResponse("Not Found")
-
 
 # def testing(request):
 #     doctor = Doctor_Information.objects.get(user=request.user)

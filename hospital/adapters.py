@@ -129,7 +129,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
                     return "/profile-settings/"  # Redirect to profile settings page
                 return "/patient-dashboard/"
             elif user.is_doctor:
-                doctor = user.profile
+                doctor = user.doctor
                 if not doctor.profile_completed:
                     return "/doctor/profile-settings/"  # Redirect to profile settings page
                 return "/doctor/doctor-dashboard/"
