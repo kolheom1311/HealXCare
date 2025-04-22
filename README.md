@@ -31,7 +31,7 @@ cd HealXCare
 ### 2. Set Up Virtual Environment 🐍
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+venv/Scripts/activate # On Mac use `source venv/bin/activate`
 ```
 
 ### 3. Install Dependencies 📦
