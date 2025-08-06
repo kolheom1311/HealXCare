@@ -63,6 +63,7 @@ Open your browser and go to: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 | Name | Role |  
 |------|------------------------------|  
 | **Om Kolhe** | Lead Full Stack Development 🚀 |  
+| **Sahil Gawande** | Co - Author 🚀 |  
 | **Pranav Chaudhari** | Co-Lead Application Development 💻 |  
 | **Kareena Darade** | PR, Presentation, Designs/Prototype Development 🎨 |  
 | **Gargi Ubarhande** | PR, Presentation, Designs/Prototype Development 🎨 |  
