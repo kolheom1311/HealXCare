@@ -35,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['192.168.1.5', '127.0.0.1']
+ALLOWED_HOSTS = ['healxcare.onrender.com','192.168.1.5', '127.0.0.1']
 # ALLOWED_HOSTS = ['mobile view', 'local host','ngrok -- keeps on changing']
 
 # Application definition
@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'payments',
     'rest_framework',
     'ChatApp.apps.ChatappConfig',
-    'debug_toolbar',
+    # 'debug_toolbar',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -104,7 +104,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # ADD THIS LINE
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INTERNAL_IPS = [
