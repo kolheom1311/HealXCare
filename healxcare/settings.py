@@ -97,7 +97,8 @@ SOCIALACCOUNT_ADAPTER = "hospital.adapters.MySocialAccountAdapter"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-'whitenoise.middleware.WhiteNoiseMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -198,7 +199,16 @@ STATICFILES_DIRS = [
 
 
 
-ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables for security
+# ZEPTO_MAIL_API_KEY = env('ZEPTO_MAIL_API_KEY')  # Store in environment variables for security
+
+# Gmail SMTP (use App Password)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('GMAIL_USER')       # e.g. yourgmail@gmail.com
+EMAIL_HOST_PASSWORD = env('GMAIL_APP_PASSWORD')  # 16-char App Password
+DEFAULT_FROM_EMAIL = f"HealXCare <{env('GMAIL_USER')}>"
 
 # Twilio Credentials
 TWILIO_ACCOUNT_SID = env('TWILIO_ACCOUNT_SID')

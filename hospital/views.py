@@ -45,39 +45,6 @@ from payments.models import Payment
 
 GEMINI_API_KEY = settings.GEMINI_API_KEY.strip()
 GEMINI_API_ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-pro:generateText?key=${GEMINI_API_KEY}"
-def send_test_email(request):
-    """View to send a welcome email using ZeptoMail"""
-    response = send_zeptomail(
-        subject="Welcome to HealxCare - Your Journey to Better Health Starts Here!",
-        to_email="rohandhonde36@gmail.com",
-        message="""
-        <html>
-        <body>
-            <h1 style="color:#2D89EF;">Welcome to HealxCare! 🎉</h1>
-            <p>Dear User,</p>
-            <p>We're thrilled to have you on board. Your health and well-being are our top priorities, and we’re here to support you every step of the way.</p>
-            <p>With <strong>HealxCare</strong>, you can:</p>
-            <ul>
-                <li>✅ Access personalized health insights</li>
-                <li>✅ Track your wellness progress</li>
-                <li>✅ Connect with expert healthcare professionals</li>
-                <li>✅ Get real-time health updates and recommendations</li>
-            </ul>
-            <p>To get started, simply log in to your account and explore everything we have to offer.</p>
-            <p><a href="https://healxcare.in/login" style="background-color:#2D89EF;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Login to Your Account</a></p>
-            <p>If you have any questions, our support team is always here to help.</p>
-            <p>Stay healthy, stay happy.</p>
-            <p><strong>The HealxCare Team</strong></p>
-            <hr>
-            <p>📧 Need help? Contact us at <a href="mailto:support@healxcare.com">support@healxcare.com</a></p>
-        </body>
-        </html>
-        """
-    )
-
-    
-    return JsonResponse(response)  # Return ZeptoMail response as JSON
-
 # def send_template_email(request):
 #     """View to send an email using a ZeptoMail template."""
     
@@ -130,8 +97,10 @@ def send_patient_verification_email(request, user):
 
     verification_link = f"http://{current_site.domain}/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{token_generator.make_token(user)}/"
 
-    template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    # template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    template_token = "activate_account"
     template_data = {
+        "subject":"Activate Your HealXCare Account – Verification Link Inside 🚀",
         "Link": verification_link
     }
 
@@ -189,9 +158,11 @@ def resetPassword(request):
             reset_link = f"http://{current_site.domain}/reset/{uid}/{token}/"
 
             # **ZeptoMail Integration**
-            template_token = "2518b.53e56cd38bd377f6.k1.4c77b750-e6e8-11ef-ab60-525400b0b0f3.194eadc2f45"
+            # template_token = "2518b.53e56cd38bd377f6.k1.4c77b750-e6e8-11ef-ab60-525400b0b0f3.194eadc2f45"
+            template_token = "reset_password"
             template_data = {
-                "reset-link": reset_link
+                "subject":"Reset Your HealXCare Password – Action Required 🔒",
+                "reset_link": reset_link
             }
 
             send_zeptomail_using_template(
@@ -392,14 +363,16 @@ def activate_account(request, uidb64, token):
             # Fallback if user's name is empty
             username = user.username # if user.username.strip() else "User"
             # Send email after successful registration
-            template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+            # template_token = "2518b.53e56cd38bd377f6.k1.bef12a20-e538-11ef-ac6f-525400ab18e6.194dfcff5c2"
+            template = "welcome"
             template_data = {
-                "Username": username  # Use first name or fallback
+                "subject":"Welcome to HealXCare - Your Journey to Better Health Starts Here!",
+                "username": username  # Use first name or fallback
             }
             
             send_zeptomail_using_template(
                 to_email=user.email,  # Send email to registered user
-                template_token=template_token,
+                template_token=template,
                 template_data=template_data
             )
 

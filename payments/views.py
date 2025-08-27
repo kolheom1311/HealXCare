@@ -67,6 +67,7 @@ def create_payment(request, appointment_id):
 
     return render(request, 'payment/razorpay_checkout.html', {
         'appointment': appointment,
+        'KEY_ID': settings.KEYID,
         'razorpay_order_id': razorpay_order_id,
         'amount': amount / 100,
         'payment_type': "Online"

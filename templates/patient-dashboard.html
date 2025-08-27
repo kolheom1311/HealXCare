@@ -108,77 +108,86 @@
                               </tr>
                             </thead>
                             <tbody>
+                              
                               {% for appointment in appointments %}
-                              <tr>
-                                <td>
-                                  <h2 class="table-avatar">
-                                    <a href="{% url 'doctor-profile' pk=appointment.doctor.doctor_id %}"
-                                      class="avatar avatar-sm mr-2">
-                                      <img class="avatar-img rounded-circle"
-                                        src="{{ appointment.doctor.featured_image.url }}" alt="User Image" />
-                                    </a>
-                                    <a href="{% url 'doctor-profile' pk=appointment.doctor.doctor_id %}">{{appointment.doctor.name}}
-                                      <span>{{appointment.doctor.department_name}}</span></a>
-                                  </h2>
-                                </td>
-                                <td>
-                                  {{appointment.date}}
-                                  <span class="d-block text-info">{{appointment.time}}</span>
-                                </td>
-                                <td>{{appointment.appointment_type}}</td>
+                                <tr>
+                                  <td>
+                                    <h2 class="table-avatar">
+                                      <a href="{% url 'doctor-profile' pk=appointment.doctor.doctor_id %}" class="avatar avatar-sm mr-2">
+                                        <img class="avatar-img rounded-circle" src="{{ appointment.doctor.featured_image.url }}" alt="User Image" />
+                                      </a>
+                                      <a href="{% url 'doctor-profile' pk=appointment.doctor.doctor_id %}">
+                                        {{ appointment.doctor.name }}
+                                        <span>{{ appointment.doctor.department_name }}</span>
+                                      </a>
+                                    </h2>
+                                  </td>
 
-                                {% if appointment.appointment_type == 'checkup' %}
-                                <td>{{appointment.doctor.consultation_fee}} INR</td>
-                                {% else %}
-                                <td>{{appointment.doctor.report_fee}} INR</td>
-                                {% endif %}
-                                <td>
-                                  {% if appointment.appointment_status == 'pending' %}
-                                  <span class="badge badge-pill bg-warning-light">Pending</span>
-                                  {% elif appointment.appointment_status == 'confirmed' %}
-                                  <span class="badge badge-pill bg-success-light">Confirm</span>
-                                  {% elif appointment.appointment_status == 'cancelled' %}
-                                  <span class="badge badge-pill bg-danger-light">Cancelled</span>
-                                  {% endif %}
-                                </td>
-                                <td class="text-center">
-                                  {% if appointment.appointment_status == 'cancelled' %}
-                                  <span class="badge badge-pill bg-secondary-light">Not Required</span>
-                                  {% elif appointment.payment_status == 'pending' %}
-                                  <span class="badge badge-pill bg-warning-light">Pending</span>
-                                  {% elif appointment.payment_status == 'VALID' %}
-                                  <span class="badge badge-pill bg-success-light">Paid</span>
-                                  {% endif %}
-                                </td>
+                                  <td>
+                                    {{ appointment.date }}
+                                    <span class="d-block text-info">{{ appointment.time }}</span>
+                                  </td>
 
-                                <td>
-                                  {% if appointment.appointment_status == 'cancelled' %}
-                                  <div class="table-action">
-                                    <button class="btn btn-sm bg-secondary-light" disabled>
-                                      <i class="fas fa-dollar-sign"></i> Pay Now
-                                    </button>
-                                  </div>
-                                  {% elif appointment.payment_status == 'pending' %}
-                                  <div class="table-action">
-                                    <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
-                                      {% csrf_token %}
-                                      <button type="submit" class="btn btn-sm bg-success-light">
-                                        <i class="fas fa-dollar-sign"></i> Pay Now
-                                      </button>
-                                    </form>
-                                  </div>
-                                  {% elif appointment.payment_status == 'VALID' %}
-                                  <div class="table-action">
-                                    <a href="{% url 'payments:billing_invoice' appointment.payment.payment_id %}"
-                                      class="btn btn-sm bg-info-light">
-                                      <i class="fas fa-file-invoice"></i> View Invoice
-                                    </a>
-                                  </div>
+                                  <td>{{ appointment.appointment_type }}</td>
 
+                                  {% if appointment.appointment_type == 'checkup' %}
+                                    <td>{{ appointment.doctor.consultation_fee }} INR</td>
+                                  {% else %}
+                                    <td>{{ appointment.doctor.report_fee }} INR</td>
                                   {% endif %}
-                                </td>
-                              </tr>
-                              {% endfor %}
+
+                                  <td>
+                                    {% if appointment.appointment_status == 'pending' %}
+                                      <span class="badge badge-pill bg-warning-light">Pending</span>
+                                    {% elif appointment.appointment_status == 'confirmed' %}
+                                      <span class="badge badge-pill bg-success-light">Confirm</span>
+                                    {% elif appointment.appointment_status == 'cancelled' %}
+                                      <span class="badge badge-pill bg-danger-light">Cancelled</span>
+                                    {% endif %}
+                                  </td>
+
+                                  <td class="text-center">
+                                    {% if appointment.appointment_status == 'cancelled' %}
+                                      <span class="badge badge-pill bg-secondary-light">Not Required</span>
+                                    {% elif appointment.payment_status == 'pending' %}
+                                      <span class="badge badge-pill bg-warning-light">Pending</span>
+                                    {% elif appointment.payment_status == 'VALID' %}
+                                      <span class="badge badge-pill bg-success-light">Paid</span>
+                                    {% endif %}
+                                  </td>
+
+                                  <td>
+                                    {% if appointment.appointment_status == 'cancelled' %}
+                                      <div class="table-action">
+                                        <button class="btn btn-sm bg-secondary-light" disabled>
+                                          <i class="fas fa-dollar-sign"></i> Pay Now
+                                        </button>
+                                      </div>
+                                    {% elif appointment.payment_status == 'pending' %}
+                                      <div class="table-action">
+                                        <form action="{% url 'payments:create_payment' appointment.id %}" method="POST">
+                                          {% csrf_token %}
+                                          <button type="submit" class="btn btn-sm bg-success-light">
+                                            <i class="fas fa-dollar-sign"></i> Pay Now
+                                          </button>
+                                        </form>
+                                      </div>
+                                    {% elif appointment.payment_status == 'VALID' %}
+                                      {% with latest_payment=appointment.payments.last %}
+                                        {% if latest_payment and latest_payment.payment_id %}
+                                          <div class="table-action">
+                                            <a href="{% url 'payments:billing_invoice' latest_payment.payment_id %}" class="btn btn-sm bg-info-light">
+                                              <i class="fas fa-file-invoice"></i> View Invoice
+                                            </a>
+                                          </div>
+                                        {% else %}
+                                          <span class="badge badge-pill bg-secondary-light">Invoice Not Available</span>
+                                        {% endif %}
+                                      {% endwith %}
+                                    {% endif %}
+                                  </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                           </table>
                         </div>

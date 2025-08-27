@@ -190,8 +190,10 @@ def send_verification_email(request, user):
     token_generator = PasswordResetTokenGenerator()
     verification_link = f"http://{current_site.domain}/doctor/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{token_generator.make_token(user)}/"
     
-    template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    # template_token = "2518b.53e56cd38bd377f6.k1.5c196c50-e6af-11ef-a543-cabf48e1bf81.194e9670795"
+    template_token = "activate_account"
     template_data = {
+        "subject":"Activate Your HealXCare Account – Verification Link Inside 🚀",
         "Link": verification_link
     }
     
@@ -203,7 +205,8 @@ def send_verification_email(request, user):
 
 
 def send_appointment_status_mail(request, patient_email, template_data):
-    template_token = "2518b.53e56cd38bd377f6.k1.fb7e96e0-e7bc-11ef-ac6f-525400ab18e6.194f04e074e"
+    # template_token = "2518b.53e56cd38bd377f6.k1.fb7e96e0-e7bc-11ef-ac6f-525400ab18e6.194f04e074e"
+    template_token = "appointment_status"
     
     send_zeptomail_using_template(
         to_email=patient_email,
@@ -346,8 +349,10 @@ def accept_appointment(request, pk):
     appointment_date = format(appointment.date, "d-m-Y")  # Convert date to string
     appointment_time = str(appointment.time)  # Convert time to string
     appointment_status = appointment.appointment_status
-    
+    # subject="📅 Your Appointment Status Update with Dr. ", {{doctor_name}}, "🏥"
+    subject = "📅 Your Appointment Status Update with Dr. " + doctor_name + " 🏥"
     template_data = {
+        "subject":subject,
         "status_message": appointment_status,
         "appointment_time": appointment_time,
         "patient_name": patient_name,
@@ -373,8 +378,9 @@ def reject_appointment(request, pk):
     appointment_time = str(appointment.time)  # Convert time to string
     patient_name = appointment.patient.name
     doctor_name = appointment.doctor.name
-    
+    subject="📅 Your Appointment Status Update with Dr. ", {{doctor_name}}, "🏥"
     template_data = {
+        "subject":subject,
         "status_message": appointment_status,
         "appointment_time": appointment_time,
         "patient_name": patient_name,
@@ -382,7 +388,7 @@ def reject_appointment(request, pk):
         "doctor_name": doctor_name
     }
 
-    # send_appointment_status_mail(request, patient_email, template_data)
+    send_appointment_status_mail(request, patient_email, template_data)
     
     messages.error(request, 'Appointment Rejected')
     
